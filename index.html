@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consultoria Financeira — Raquel Alvares</title>
+  <link rel="icon" type="image/webp" href="favicon.webp">
+
+  <style>
+    /* ─── Fontes locais ──────────────────────── */
+    @font-face {
+      font-family: 'Halyard';
+      src: url('Documents/Fontes/halyard-display-regular.ttf') format('truetype');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'DMSans';
+      src: url('Documents/Fontes/DM_Sans/static/DMSans_18pt-Regular.ttf') format('truetype');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'DMSans';
+      src: url('Documents/Fontes/DM_Sans/static/DMSans_18pt-SemiBold.ttf') format('truetype');
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #fafafa;
+      --bg-inner:     #FFFCD9;
+      --surface:      #FFFCD9;
+      --gold:         #F7D54B;
+      --gold-dark:    #D4AF1A;
+      --gold-light:   rgba(247,213,75,.18);
+      --gold-ring:    rgba(247,213,75,.35);
+      --gold-border:  rgba(247,213,75,.55);
+      --text:         #181818;
+      --text-mid:     #555248;
+      --text-soft:    #9A9080;
+      --border:       #EAE0C0;
+      --input-bg:     #FFFFFF;
+      --error:        #C83B3B;
+      --radius:       12px;
+      --radius-pill:  9999px;
+    }
+
+    body {
+      font-family: 'DMSans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 1rem 5rem;
+    }
+
+    /* ─── Logo ────────────────────────────────── */
+    .logo {
+      margin-bottom: 1.75rem;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+    }
+
+    .logo img {
+      height: 90px;
+      width: auto;
+    }
+
+    @media (max-width: 600px) {
+      .logo img { height: 68px; }
+    }
+
+    /* ─── Header ──────────────────────────────── */
+    .form-header {
+      width: 100%;
+      max-width: 580px;
+      text-align: center;
+      margin-bottom: 1.75rem;
+    }
+
+    .form-header h1 {
+      font-family: 'Halyard', system-ui, sans-serif;
+      font-weight: 400;
+      font-size: clamp(1.5rem, 3.5vw, 2rem);
+      line-height: 1.25;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+      text-wrap: balance;
+    }
+
+    .form-header h1 em {
+      font-style: normal;
+      color: var(--gold-dark);
+    }
+
+    .form-header p {
+      font-family: 'DMSans', sans-serif;
+      font-size: 0.95rem;
+      color: var(--text-mid);
+      font-weight: 400;
+      text-wrap: balance;
+    }
+
+    /* ─── Progress ────────────────────────────── */
+    .progress-wrap {
+      width: 100%;
+      max-width: 580px;
+      margin-bottom: 1.25rem;
+    }
+
+    .progress-bar {
+      display: flex;
+      gap: 6px;
+    }
+
+    .seg {
+      flex: 1;
+      height: 6px;
+      background: rgba(255,255,255,.5);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .seg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--gold-dark);
+      border-radius: var(--radius-pill);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.45s cubic-bezier(0.22,1,0.36,1);
+    }
+
+    .seg.done::after,
+    .seg.active::after { transform: scaleX(1); }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.45rem;
+      font-size: 0.73rem;
+      font-weight: 600;
+      color: var(--text-mid);
+    }
+
+    .progress-meta .cur { color: var(--gold-dark); font-weight: 700; }
+
+    /* ─── Card ────────────────────────────────── */
+    .form-card {
+      width: 100%;
+      max-width: 580px;
+      background: var(--surface);
+      border-radius: 20px;
+      padding: 2.5rem 2.25rem;
+      box-shadow:
+        0 2px 6px rgba(181,140,0,.08),
+        0 16px 48px rgba(181,140,0,.14);
+    }
+
+    /* ─── Steps ───────────────────────────────── */
+    .step { display: none; }
+
+    .step.active {
+      display: block;
+      animation: rise 0.32s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .step-tag {
+      display: inline-block;
+      font-family: 'DMSans', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold-dark);
+      background: var(--gold-light);
+      padding: 0.25rem 0.8rem;
+      border-radius: var(--radius-pill);
+      margin-bottom: 0.9rem;
+    }
+
+    .step-title {
+      font-family: 'Halyard', system-ui, sans-serif;
+      font-weight: 400;
+      font-size: clamp(1.35rem, 3vw, 1.7rem);
+      line-height: 1.25;
+      color: var(--text);
+      margin-bottom: 0.35rem;
+    }
+
+    .step-sub {
+      font-family: 'DMSans', sans-serif;
+      font-size: 0.9rem;
+      color: var(--text-mid);
+      font-weight: 400;
+      margin-bottom: 1.75rem;
+      line-height: 1.65;
+    }
+
+    /* ─── Notice ─────────────────────────────── */
+    .notice {
+      font-family: 'DMSans', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 400;
+      color: var(--text-mid);
+      background: rgba(247,213,75,.15);
+      border-left: 3px solid var(--gold);
+      border-radius: 0 8px 8px 0;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1.75rem;
+      line-height: 1.6;
+    }
+
+    .notice strong {
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    /* ─── Fields ──────────────────────────────── */
+    .field { margin-bottom: 1.2rem; }
+
+    .lbl {
+      display: block;
+      font-family: 'DMSans', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-mid);
+      margin-bottom: 0.4rem;
+    }
+
+    .lbl .req { color: var(--gold-dark); }
+
+    .field input[type="text"],
+    .field input[type="email"],
+    .field input[type="tel"],
+    .field textarea {
+      width: 100%;
+      padding: 0.78rem 1rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      font-family: 'DMSans', sans-serif;
+      font-size: 0.93rem;
+      font-weight: 400;
+      color: var(--text);
+      background: var(--input-bg);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+      -webkit-appearance: none;
+    }
+
+    .field input::placeholder,
+    .field textarea::placeholder {
+      color: #C5BB9A;
+    }
+
+    .field input:focus,
+    .field textarea:focus {
+      border-color: var(--gold-dark);
+      box-shadow: 0 0 0 4px var(--gold-ring);
+      background: #fff;
+    }
+
+    .field textarea {
+      resize: vertical;
+      min-height: 96px;
+      line-height: 1.65;
+    }
+
+    /* ─── Radio ───────────────────────────────── */
+    .radio-group { display: flex; flex-direction: column; gap: 0.45rem; }
+
+    .radio-opt {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.78rem 1rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--input-bg);
+      cursor: pointer;
+      transition: border-color 0.18s, background 0.18s, box-shadow 0.18s;
+      user-select: none;
+    }
+
+    .radio-opt:hover {
+      border-color: var(--gold-dark);
+      background: #fffdf2;
+    }
+
+    .radio-opt:has(input:checked) {
+      border-color: var(--gold-dark);
+      background: var(--gold-light);
+      box-shadow: 0 0 0 1px var(--gold-dark);
+    }
+
+    .radio-opt input[type="radio"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border: 1.5px solid var(--border);
+      border-radius: 50%;
+      flex-shrink: 0;
+      position: relative;
+      cursor: pointer;
+      background: #fff;
+      transition: border-color 0.18s;
+    }
+
+    .radio-opt input[type="radio"]::after {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: var(--gold-dark);
+      border-radius: 50%;
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%) scale(0);
+      transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+    }
+
+    .radio-opt input[type="radio"]:checked { border-color: var(--gold-dark); }
+    .radio-opt input[type="radio"]:checked::after { transform: translate(-50%,-50%) scale(1); }
+
+    .opt-label {
+      font-family: 'DMSans', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 400;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    /* ─── Erros ───────────────────────────────── */
+    .ferr {
+      font-family: 'DMSans', sans-serif;
+      font-size: 0.73rem;
+      font-weight: 600;
+      color: var(--error);
+      margin-top: 0.3rem;
+      display: none;
+    }
+
+    .field.err input,
+    .field.err textarea { border-color: var(--error); }
+    .field.err .ferr { display: block; }
+
+    /* ─── Divisor ─────────────────────────────── */
+    .sep {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 1.5rem 0;
+    }
+
+    /* ─── Botões ──────────────────────────────── */
+    .btn-row {
+      display: flex;
+      gap: 0.7rem;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      font-family: 'DMSans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      border: none;
+      border-radius: var(--radius-pill);
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background: var(--gold);
+      color: var(--text);
+      padding: 0.85rem 2rem;
+      flex: 1;
+      box-shadow: 0 4px 16px rgba(247,213,75,.45);
+    }
+
+    .btn-primary:hover {
+      background: #f0cb2a;
+      box-shadow: 0 6px 22px rgba(247,213,75,.55);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-back {
+      background: transparent;
+      color: var(--text-mid);
+      border: 1.5px solid var(--border);
+      padding: 0.8rem 1.5rem;
+    }
+
+    .btn-back:hover {
+      border-color: var(--text-mid);
+      color: var(--text);
+    }
+
+    /* ─── WhatsApp btn ───────────────────────── */
+    .btn-whatsapp {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: 1.5rem;
+      padding: 0.85rem 1.75rem;
+      background: #25D366;
+      color: #fff;
+      font-family: 'DMSans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: var(--radius-pill);
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+      box-shadow: 0 4px 14px rgba(37,211,102,.3);
+    }
+
+    .btn-whatsapp:hover {
+      background: #1ebe5d;
+      transform: translateY(-1px);
+    }
+
+    /* ─── Sucesso ─────────────────────────────── */
+    .success-screen {
+      display: none;
+      text-align: center;
+      padding: 1.5rem 0;
+    }
+
+    .success-screen.active {
+      display: block;
+      animation: rise 0.4s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    .success-icon {
+      width: 68px;
+      height: 68px;
+      background: var(--gold-light);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+    }
+
+    .success-screen .step-title { margin-bottom: 0.25rem; }
+
+    .success-screen p {
+      font-size: 0.93rem;
+      color: var(--text-mid);
+      line-height: 1.8;
+      max-width: 360px;
+      margin: 1rem auto 0;
+    }
+
+    /* ─── Responsivo ──────────────────────────── */
+    @media (max-width: 600px) {
+      body { padding: 1.5rem 0.75rem 4rem; }
+      .form-card { padding: 1.75rem 1.25rem; border-radius: 16px; }
+      .logo-raquel { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Logo -->
+  <a class="logo" href="#">
+    <img src="logo.svg" alt="Raquel Alvares Finanças">
+  </a>
+
+  <!-- Subtítulo -->
+  <div class="form-header">
+    <h1>Me conta um pouco mais sobre <em>seu momento financeiro</em></h1>
+    <p>Para que possamos te atender da melhor forma, precisamos conhecer um pouco da sua realidade financeira atual. As informações são sigilosas e usadas exclusivamente para análise do seu perfil.</p>
+  </div>
+
+  <!-- Progresso -->
+  <div class="progress-wrap">
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="progress-meta">
+      <span id="progressLabel" class="cur"></span>
+    </div>
+  </div>
+
+  <!-- Card -->
+  <div class="form-card">
+
+    <!-- ════════════════════════════════════════
+         ETAPA 1 — Contato + Tipo
+    ════════════════════════════════════════ -->
+    <div class="step active" id="step-contact">
+      <div class="step-tag">Etapa 1</div>
+      <h2 class="step-title">Olá! Vamos começar</h2>
+      <p class="step-sub">Precisamos de algumas informações para entrar em contato com você.</p>
+
+      <div class="field" id="f-nome">
+        <label class="lbl" for="nome">Nome completo <span class="req">*</span></label>
+        <input type="text" id="nome" autocomplete="name" placeholder="Seu nome completo">
+        <div class="ferr">Por favor, informe seu nome completo.</div>
+      </div>
+
+      <div class="field" id="f-email">
+        <label class="lbl" for="email">E-mail <span class="req">*</span></label>
+        <input type="email" id="email" autocomplete="email" placeholder="seu@email.com">
+        <div class="ferr">Por favor, informe um e-mail válido.</div>
+      </div>
+
+      <div class="field" id="f-telefone">
+        <label class="lbl" for="telefone">Telefone / WhatsApp <span class="req">*</span></label>
+        <input type="tel" id="telefone" autocomplete="tel" placeholder="(00) 00000-0000">
+        <div class="ferr">Por favor, informe seu telefone.</div>
+      </div>
+
+      <hr class="sep">
+
+      <div class="field" id="f-tipo">
+        <label class="lbl">Busca atendimento para <span class="req">*</span></label>
+        <div class="radio-group">
+          <label class="radio-opt">
+            <input type="radio" name="tipo" value="pessoal">
+            <span class="opt-label">Finanças pessoais</span>
+          </label>
+          <label class="radio-opt">
+            <input type="radio" name="tipo" value="empresa">
+            <span class="opt-label">Finanças da empresa</span>
+          </label>
+          <label class="radio-opt">
+            <input type="radio" name="tipo" value="ambas">
+            <span class="opt-label">Ambas</span>
+          </label>
+        </div>
+        <div class="ferr">Por favor, selecione uma opção.</div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="submitContact()">Continuar →</button>
+      </div>
+    </div>
+
+
+    <!-- ════════════════════════════════════════
+         PESSOAL — Etapa 2
+    ════════════════════════════════════════ -->
+    <div class="step" id="step-p2">
+      <div class="step-tag">Etapa 2 · Finanças Pessoais</div>
+      <h2 class="step-title">Sua situação financeira</h2>
+      <p class="step-sub">Essas informações nos ajudam a personalizar o seu atendimento.</p>
+
+      <div class="field" id="f-renda">
+        <label class="lbl">Faixa de renda (você ou sua família) <span class="req">*</span></label>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="renda" value="ate3k"><span class="opt-label">Até R$ 3.000</span></label>
+          <label class="radio-opt"><input type="radio" name="renda" value="3a9k"><span class="opt-label">De R$ 3.000 a R$ 9.000</span></label>
+          <label class="radio-opt"><input type="radio" name="renda" value="9a15k"><span class="opt-label">De R$ 9.000 a R$ 15.000</span></label>
+          <label class="radio-opt"><input type="radio" name="renda" value="acima15k"><span class="opt-label">Acima de R$ 15.000</span></label>
+        </div>
+        <div class="ferr">Por favor, selecione sua faixa de renda.</div>
+      </div>
+
+      <div class="field" id="f-dividas-p">
+        <label class="lbl">Tem dívidas em atraso? <span class="req">*</span></label>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="dividas_p" value="sim"><span class="opt-label">Sim</span></label>
+          <label class="radio-opt"><input type="radio" name="dividas_p" value="nao"><span class="opt-label">Não</span></label>
+        </div>
+        <div class="ferr">Por favor, selecione uma opção.</div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-back" onclick="goTo('contact',0)">← Voltar</button>
+        <button class="btn btn-primary" onclick="submitP2()">Continuar →</button>
+      </div>
+    </div>
+
+
+    <!-- ════════════════════════════════════════
+         PESSOAL — Etapa 3 (dívidas)
+    ════════════════════════════════════════ -->
+    <div class="step" id="step-p3">
+      <div class="step-tag">Etapa 3 · Suas Dívidas</div>
+      <h2 class="step-title">Fale sobre as dívidas</h2>
+      <p class="step-sub">Fique tranquilo(a), tudo é tratado com total sigilo.</p>
+
+      <div class="field">
+        <label class="lbl" for="quais_dividas_p">Quais são as dívidas e em quais bancos?</label>
+        <textarea id="quais_dividas_p" placeholder="Ex: cartão de crédito no Bradesco, empréstimo no Nubank…"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="lbl" for="valor_dividas_p">Qual o valor aproximado em atraso?</label>
+        <textarea id="valor_dividas_p" placeholder="Ex: aproximadamente R$ 12.000" style="min-height:72px;"></textarea>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-back" onclick="goTo('p2',1)">← Voltar</button>
+        <button class="btn btn-primary" onclick="goTo('p4',2)">Continuar →</button>
+      </div>
+    </div>
+
+
+    <!-- ════════════════════════════════════════
+         PESSOAL — Etapa Final
+    ════════════════════════════════════════ -->
+    <div class="step" id="step-p4">
+      <div class="step-tag">Última etapa</div>
+      <h2 class="step-title">Seus objetivos</h2>
+      <p class="step-sub">Só mais algumas perguntas para completar seu diagnóstico.</p>
+
+      <div class="field" id="f-reserva-p">
+        <label class="lbl">Tem reserva financeira? <span class="req">*</span></label>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="reserva_p" value="sim"><span class="opt-label">Sim</span></label>
+          <label class="radio-opt"><input type="radio" name="reserva_p" value="nao"><span class="opt-label">Não</span></label>
+        </div>
+        <div class="ferr">Por favor, selecione uma opção.</div>
+      </div>
+
+      <div class="field">
+        <label class="lbl" for="busca_p">O que você busca em uma consultoria financeira?</label>
+        <textarea id="busca_p" placeholder="Compartilhe seus objetivos e expectativas…"></textarea>
+      </div>
+
+      <div class="field" id="f-prioridade-p">
+        <label class="lbl" for="prioridade_p">Hoje é uma prioridade resolver isso em sua vida? <span class="req">*</span></label>
+        <textarea id="prioridade_p" placeholder="Conte-nos um pouco sobre isso…" style="min-height:80px;"></textarea>
+        <div class="ferr">Por favor, responda esta pergunta.</div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-back" id="back-p4">← Voltar</button>
+        <button class="btn btn-primary" onclick="submitFinal('p4')">Enviar</button>
+      </div>
+    </div>
+
+
+    <!-- ════════════════════════════════════════
+         EMPRESA — Etapa 2
+    ════════════════════════════════════════ -->
+    <div class="step" id="step-e2">
+      <div class="step-tag">Etapa 2 · Finanças Empresariais</div>
+      <h2 class="step-title">Sobre sua empresa</h2>
+      <p class="step-sub">Essas informações nos ajudam a entender o perfil do seu negócio.</p>
+
+      <div class="field" id="f-nome-empresa">
+        <label class="lbl" for="nome_empresa">Nome da empresa <span class="req">*</span></label>
+        <input type="text" id="nome_empresa" placeholder="Razão social ou nome fantasia">
+        <div class="ferr">Por favor, informe o nome da empresa.</div>
+      </div>
+
+      <div class="field">
+        <label class="lbl" for="faturamento">Faturamento nos últimos 12 meses</label>
+        <textarea id="faturamento" placeholder="Ex: R$ 480.000" style="min-height:72px;"></textarea>
+      </div>
+
+      <div class="field" id="f-dividas-e">
+        <label class="lbl">Tem dívidas em atraso? <span class="req">*</span></label>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="dividas_e" value="sim"><span class="opt-label">Sim</span></label>
+          <label class="radio-opt"><input type="radio" name="dividas_e" value="nao"><span class="opt-label">Não, não tenho dívidas em atraso</span></label>
+        </div>
+        <div class="ferr">Por favor, selecione uma opção.</div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-back" onclick="goTo('contact',0)">← Voltar</button>
+        <button class="btn btn-primary" onclick="submitE2()">Continuar →</button>
+      </div>
+    </div>
+
+
+    <!-- ════════════════════════════════════════
+         EMPRESA — Etapa 3 (dívidas)
+    ════════════════════════════════════════ -->
+    <div class="step" id="step-e3">
+      <div class="step-tag">Etapa 3 · Dívidas</div>
+      <h2 class="step-title">Fale sobre as dívidas</h2>
+      <p class="step-sub">Fique tranquilo(a), tudo é tratado com total sigilo.</p>
+
+      <div class="field">
+        <label class="lbl" for="quais_dividas_e">Quais são as dívidas e em quais bancos?</label>
+        <textarea id="quais_dividas_e" placeholder="Ex: capital de giro no Itaú, cartão empresarial no BTG…"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="lbl" for="valor_dividas_e">Qual o valor aproximado em atraso?</label>
+        <textarea id="valor_dividas_e" placeholder="Ex: aproximadamente R$ 80.000" style="min-height:72px;"></textarea>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-back" onclick="goTo('e2',1)">← Voltar</button>
+        <button class="btn btn-primary" onclick="goTo('e4',2)">Continuar →</button>
+      </div>
+    </div>
+
+
+    <!-- ════════════════════════════════════════
+         EMPRESA — Etapa Final
+    ════════════════════════════════════════ -->
+    <div class="step" id="step-e4">
+      <div class="step-tag">Última etapa</div>
+      <h2 class="step-title">Seus objetivos</h2>
+      <p class="step-sub">Só mais algumas perguntas para completar seu diagnóstico.</p>
+
+      <div class="field" id="f-reserva-e">
+        <label class="lbl">Tem reserva financeira? <span class="req">*</span></label>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="reserva_e" value="sim"><span class="opt-label">Sim</span></label>
+          <label class="radio-opt"><input type="radio" name="reserva_e" value="nao"><span class="opt-label">Não</span></label>
+        </div>
+        <div class="ferr">Por favor, selecione uma opção.</div>
+      </div>
+
+      <div class="field">
+        <label class="lbl" for="busca_e">O que você busca em uma consultoria financeira?</label>
+        <textarea id="busca_e" placeholder="Compartilhe seus objetivos e expectativas…"></textarea>
+      </div>
+
+      <div class="field" id="f-prioridade-e">
+        <label class="lbl" for="prioridade_e">Hoje é uma prioridade resolver isso em sua vida ou na sua empresa? <span class="req">*</span></label>
+        <textarea id="prioridade_e" placeholder="Conte-nos um pouco sobre isso…" style="min-height:80px;"></textarea>
+        <div class="ferr">Por favor, responda esta pergunta.</div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-back" id="back-e4">← Voltar</button>
+        <button class="btn btn-primary" onclick="submitFinal('e4')">Enviar</button>
+      </div>
+    </div>
+
+
+    <!-- ════════════════════════════════════════
+         AMBAS — Etapa 2
+    ════════════════════════════════════════ -->
+    <div class="step" id="step-a2">
+      <div class="step-tag">Etapa 2 · Pessoal &amp; Empresarial</div>
+      <h2 class="step-title">Sua situação financeira</h2>
+      <p class="step-sub">Precisamos entender tanto o contexto pessoal quanto o empresarial.</p>
+
+      <div class="field" id="f-renda-a">
+        <label class="lbl">Faixa de renda (você ou sua família) <span class="req">*</span></label>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="renda_a" value="ate3k"><span class="opt-label">Até R$ 3.000</span></label>
+          <label class="radio-opt"><input type="radio" name="renda_a" value="3a9k"><span class="opt-label">De R$ 3.000 a R$ 9.000</span></label>
+          <label class="radio-opt"><input type="radio" name="renda_a" value="9a15k"><span class="opt-label">De R$ 9.000 a R$ 15.000</span></label>
+          <label class="radio-opt"><input type="radio" name="renda_a" value="acima15k"><span class="opt-label">Acima de R$ 15.000</span></label>
+        </div>
+        <div class="ferr">Por favor, selecione sua faixa de renda.</div>
+      </div>
+
+      <div class="field" id="f-nome-empresa-a">
+        <label class="lbl" for="nome_empresa_a">Nome da empresa <span class="req">*</span></label>
+        <input type="text" id="nome_empresa_a" placeholder="Razão social ou nome fantasia">
+        <div class="ferr">Por favor, informe o nome da empresa.</div>
+      </div>
+
+      <div class="field">
+        <label class="lbl" for="faturamento_a">Faturamento nos últimos 12 meses</label>
+        <textarea id="faturamento_a" placeholder="Ex: R$ 480.000" style="min-height:72px;"></textarea>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-back" onclick="goTo('contact',0)">← Voltar</button>
+        <button class="btn btn-primary" onclick="submitA2()">Continuar →</button>
+      </div>
+    </div>
+
+
+    <!-- ════════════════════════════════════════
+         AMBAS — Etapa 3 (dívidas)
+    ════════════════════════════════════════ -->
+    <div class="step" id="step-a3">
+      <div class="step-tag">Etapa 3 · Dívidas</div>
+      <h2 class="step-title">Situação de dívidas</h2>
+      <p class="step-sub">Selecione a opção que melhor descreve sua situação atual.</p>
+
+      <div class="field" id="f-dividas-a">
+        <label class="lbl">Tem dívidas em atraso? <span class="req">*</span></label>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="dividas_a" value="empresa"><span class="opt-label">Sim, na empresa somente</span></label>
+          <label class="radio-opt"><input type="radio" name="dividas_a" value="ambas_div"><span class="opt-label">Sim, na empresa e nas finanças pessoais</span></label>
+          <label class="radio-opt"><input type="radio" name="dividas_a" value="pessoal"><span class="opt-label">Sim, nas finanças pessoais</span></label>
+          <label class="radio-opt"><input type="radio" name="dividas_a" value="nao"><span class="opt-label">Não, não tenho dívidas em atraso</span></label>
+        </div>
+        <div class="ferr">Por favor, selecione uma opção.</div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-back" onclick="goTo('a2',1)">← Voltar</button>
+        <button class="btn btn-primary" onclick="submitA3()">Continuar →</button>
+      </div>
+    </div>
+
+
+    <!-- ════════════════════════════════════════
+         AMBAS — Etapa 4 (detalhes dívidas)
+    ════════════════════════════════════════ -->
+    <div class="step" id="step-a4">
+      <div class="step-tag">Etapa 4 · Detalhes</div>
+      <h2 class="step-title">Fale sobre as dívidas</h2>
+      <p class="step-sub">Fique tranquilo(a), tudo é tratado com total sigilo.</p>
+
+      <div class="field">
+        <label class="lbl" for="quais_dividas_a">Quais são as dívidas e em quais bancos?</label>
+        <textarea id="quais_dividas_a" placeholder="Descreva as dívidas (pessoais e/ou empresariais) e os bancos envolvidos…"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="lbl" for="valor_dividas_a">Qual o valor aproximado em atraso?</label>
+        <textarea id="valor_dividas_a" placeholder="Ex: R$ 45.000" style="min-height:72px;"></textarea>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-back" onclick="goTo('a3',2)">← Voltar</button>
+        <button class="btn btn-primary" onclick="goTo('a5',3)">Continuar →</button>
+      </div>
+    </div>
+
+
+    <!-- ════════════════════════════════════════
+         AMBAS — Etapa Final
+    ════════════════════════════════════════ -->
+    <div class="step" id="step-a5">
+      <div class="step-tag">Última etapa</div>
+      <h2 class="step-title">Seus objetivos</h2>
+      <p class="step-sub">Só mais algumas perguntas para completar seu diagnóstico.</p>
+
+      <div class="field" id="f-reserva-a">
+        <label class="lbl">Tem reserva financeira? <span class="req">*</span></label>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="reserva_a" value="sim"><span class="opt-label">Sim</span></label>
+          <label class="radio-opt"><input type="radio" name="reserva_a" value="nao"><span class="opt-label">Não</span></label>
+        </div>
+        <div class="ferr">Por favor, selecione uma opção.</div>
+      </div>
+
+      <div class="field">
+        <label class="lbl" for="busca_a">O que você busca em uma consultoria financeira?</label>
+        <textarea id="busca_a" placeholder="Compartilhe seus objetivos e expectativas…"></textarea>
+      </div>
+
+      <div class="field" id="f-prioridade-a">
+        <label class="lbl" for="prioridade_a">Hoje é uma prioridade resolver isso em sua vida ou na sua empresa? <span class="req">*</span></label>
+        <textarea id="prioridade_a" placeholder="Conte-nos um pouco sobre isso…" style="min-height:80px;"></textarea>
+        <div class="ferr">Por favor, responda esta pergunta.</div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-back" id="back-a5">← Voltar</button>
+        <button class="btn btn-primary" onclick="submitFinal('a5')">Enviar</button>
+      </div>
+    </div>
+
+
+    <!-- ════════════════════════════════════════
+         Sucesso
+    ════════════════════════════════════════ -->
+    <div class="success-screen" id="success">
+      <div class="success-icon">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none"
+             stroke="#D4AF1A" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <div class="step-tag" style="margin:0 auto 0.75rem;">Formulário enviado!</div>
+      <h2 class="step-title">Suas respostas foram recebidas!</h2>
+      <p>Agora é só aguardar. Nossa equipe irá analisar seu perfil e, caso você seja selecionado(a), entraremos em contato pelos dados informados.</p>
+      <a class="btn-whatsapp" href="https://wa.me/5545991380126?text=Ol%C3%A1%2C%20acabei%20de%20preencher%20o%20question%C3%A1rio%20e%20tenho%20uma%20d%C3%BAvida." target="_blank" rel="noopener">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+        Falar com a equipe no WhatsApp
+      </a>
+      <div class="notice" style="text-align:left; margin-top:1.25rem;">O preenchimento do questionário não é uma reserva de vaga em consultoria. Você entrará em análise e o time da Raquel Alvares entrará em contato com você caso seja <strong>SELECIONADO</strong>.</div>
+    </div>
+
+  </div><!-- /form-card -->
+
+<script>
+// ─── State ─────────────────────────────────────
+const S = { tipo: '', dividas_p: '', dividas_e: '', dividas_a: '' };
+const TOTAL = { pessoal: 4, empresa: 4, ambas: 5, '': 4 };
+
+// ─── Progress ──────────────────────────────────
+function updateProgress(index) {
+  const total = TOTAL[S.tipo] || 4;
+  const bar   = document.getElementById('progressBar');
+  bar.innerHTML = '';
+  for (let i = 0; i < total; i++) {
+    const s = document.createElement('div');
+    s.className = 'seg' + (i < index ? ' done' : i === index ? ' active' : '');
+    bar.appendChild(s);
+  }
+  document.getElementById('progressLabel').textContent = `Etapa ${index + 1} de ${total}`;
+}
+
+// ─── Navigate ──────────────────────────────────
+function goTo(id, idx) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step-' + id).classList.add('active');
+  updateProgress(idx);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─── Helpers ───────────────────────────────────
+function reqText(fid, iid) {
+  const f  = document.getElementById(fid);
+  const ok = !!(document.getElementById(iid)?.value.trim());
+  f.classList.toggle('err', !ok);
+  return ok;
+}
+
+function reqRadio(fid, name) {
+  const f  = document.getElementById(fid);
+  const ok = !!document.querySelector(`input[name="${name}"]:checked`);
+  f.classList.toggle('err', !ok);
+  return ok;
+}
+
+function rVal(name) {
+  return document.querySelector(`input[name="${name}"]:checked`)?.value || '';
+}
+
+function validEmail(v) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+}
+
+// ─── Etapa 1 ───────────────────────────────────
+function submitContact() {
+  let ok = reqText('f-nome', 'nome');
+  const ef = document.getElementById('f-email');
+  const ev = document.getElementById('email').value.trim();
+  if (!ev || !validEmail(ev)) { ef.classList.add('err'); ok = false; }
+  else ef.classList.remove('err');
+  ok = reqText('f-telefone', 'telefone') && ok;
+  ok = reqRadio('f-tipo', 'tipo') && ok;
+  if (!ok) return;
+
+  S.tipo = rVal('tipo');
+  if (S.tipo === 'pessoal') goTo('p2', 1);
+  else if (S.tipo === 'empresa') goTo('e2', 1);
+  else goTo('a2', 1);
+}
+
+// ─── Pessoal ───────────────────────────────────
+function submitP2() {
+  let ok = reqRadio('f-renda', 'renda');
+  ok = reqRadio('f-dividas-p', 'dividas_p') && ok;
+  if (!ok) return;
+  S.dividas_p = rVal('dividas_p');
+  document.getElementById('back-p4').onclick = () =>
+    goTo(S.dividas_p === 'sim' ? 'p3' : 'p2', S.dividas_p === 'sim' ? 2 : 1);
+  goTo(S.dividas_p === 'sim' ? 'p3' : 'p4', 2);
+}
+
+// ─── Empresa ───────────────────────────────────
+function submitE2() {
+  let ok = reqText('f-nome-empresa', 'nome_empresa');
+  ok = reqRadio('f-dividas-e', 'dividas_e') && ok;
+  if (!ok) return;
+  S.dividas_e = rVal('dividas_e');
+  document.getElementById('back-e4').onclick = () =>
+    goTo(S.dividas_e === 'sim' ? 'e3' : 'e2', S.dividas_e === 'sim' ? 2 : 1);
+  goTo(S.dividas_e === 'sim' ? 'e3' : 'e4', 2);
+}
+
+// ─── Ambas ─────────────────────────────────────
+function submitA2() {
+  let ok = reqRadio('f-renda-a', 'renda_a');
+  ok = reqText('f-nome-empresa-a', 'nome_empresa_a') && ok;
+  if (!ok) return;
+  goTo('a3', 2);
+}
+
+function submitA3() {
+  if (!reqRadio('f-dividas-a', 'dividas_a')) return;
+  S.dividas_a = rVal('dividas_a');
+  document.getElementById('back-a5').onclick = () =>
+    goTo(S.dividas_a !== 'nao' ? 'a4' : 'a3', S.dividas_a !== 'nao' ? 3 : 2);
+  goTo(S.dividas_a !== 'nao' ? 'a4' : 'a5', 3);
+}
+
+// ─── Coleta todos os dados do formulário ────────
+function collectData() {
+  const get  = id   => document.getElementById(id)?.value?.trim() || '—';
+  const rlbl = name => document.querySelector(`input[name="${name}"]:checked`)
+                         ?.closest('.radio-opt')
+                         ?.querySelector('.opt-label')
+                         ?.textContent?.trim() || '—';
+
+  const base = {
+    'Nome':               get('nome'),
+    'E-mail':             get('email'),
+    'Telefone':           get('telefone'),
+    'Tipo de atendimento': rlbl('tipo'),
+  };
+
+  if (S.tipo === 'pessoal') {
+    Object.assign(base, {
+      'Faixa de renda':           rlbl('renda'),
+      'Dívidas em atraso':        rlbl('dividas_p'),
+      'Quais dívidas / bancos':   get('quais_dividas_p'),
+      'Valor em atraso':          get('valor_dividas_p'),
+      'Reserva financeira':       rlbl('reserva_p'),
+      'Busca na consultoria':     get('busca_p'),
+      'É prioridade':             get('prioridade_p'),
+    });
+  } else if (S.tipo === 'empresa') {
+    Object.assign(base, {
+      'Nome da empresa':          get('nome_empresa'),
+      'Faturamento (12 meses)':   get('faturamento'),
+      'Dívidas em atraso':        rlbl('dividas_e'),
+      'Quais dívidas / bancos':   get('quais_dividas_e'),
+      'Valor em atraso':          get('valor_dividas_e'),
+      'Reserva financeira':       rlbl('reserva_e'),
+      'Busca na consultoria':     get('busca_e'),
+      'É prioridade':             get('prioridade_e'),
+    });
+  } else {
+    Object.assign(base, {
+      'Faixa de renda':           rlbl('renda_a'),
+      'Nome da empresa':          get('nome_empresa_a'),
+      'Faturamento (12 meses)':   get('faturamento_a'),
+      'Dívidas em atraso':        rlbl('dividas_a'),
+      'Quais dívidas / bancos':   get('quais_dividas_a'),
+      'Valor em atraso':          get('valor_dividas_a'),
+      'Reserva financeira':       rlbl('reserva_a'),
+      'Busca na consultoria':     get('busca_a'),
+      'É prioridade':             get('prioridade_a'),
+    });
+  }
+
+  return base;
+}
+
+// ─── Final ─────────────────────────────────────
+async function submitFinal(step) {
+  const m = {
+    p4: ['f-reserva-p','reserva_p','f-prioridade-p','prioridade_p'],
+    e4: ['f-reserva-e','reserva_e','f-prioridade-e','prioridade_e'],
+    a5: ['f-reserva-a','reserva_a','f-prioridade-a','prioridade_a'],
+  }[step];
+  let ok = reqRadio(m[0], m[1]);
+  ok = reqText(m[2], m[3]) && ok;
+  if (!ok) return;
+
+  // Loading
+  const btn = document.querySelector(`#step-${step} .btn-primary`);
+  const orig = btn.textContent;
+  btn.textContent = 'Enviando…';
+  btn.disabled = true;
+
+  const data = collectData();
+
+  try {
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        access_key: '4bb74995-00bb-412d-aad3-1c2f9437d5e5',
+        subject:    'Nova solicitação de consultoria — Raquel Alvares Finanças',
+        ...data
+      })
+    });
+
+    const json = await res.json();
+    if (!res.ok || !json.success) throw new Error('Falha no envio');
+
+    // WhatsApp via CallMeBot
+    try {
+      const linhas = Object.entries(data).map(([k, v]) => `• ${k}: ${v}`).join('\n');
+      const msg = encodeURIComponent(`📋 Nova solicitação de consultoria!\n\n${linhas}`);
+      new Image().src = `https://api.callmebot.com/whatsapp.php?phone=5545991380126&text=${msg}&apikey=1330774`;
+    } catch { /* silencia */ }
+
+    // Sucesso
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.getElementById('progressBar').innerHTML = '';
+    document.getElementById('progressLabel').textContent = '';
+    document.getElementById('success').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  } catch {
+    btn.textContent = orig;
+    btn.disabled = false;
+    let errEl = document.getElementById('send-error');
+    if (!errEl) {
+      errEl = document.createElement('p');
+      errEl.id = 'send-error';
+      errEl.style.cssText = 'color:#C83B3B;font-size:0.82rem;margin-top:0.75rem;text-align:center;font-family:DMSans,sans-serif;';
+      btn.parentElement.appendChild(errEl);
+    }
+    errEl.textContent = 'Erro ao enviar. Verifique sua conexão e tente novamente.';
+  }
+}
+
+// ─── Máscara telefone ──────────────────────────
+document.getElementById('telefone').addEventListener('input', function () {
+  let v = this.value.replace(/\D/g, '').slice(0, 11);
+  if (v.length > 6)      v = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
+  else if (v.length > 2) v = `(${v.slice(0,2)}) ${v.slice(2)}`;
+  else if (v.length > 0) v = `(${v}`;
+  this.value = v;
+});
+
+// ─── Init ──────────────────────────────────────
+updateProgress(0);
+</script>
+</body>
+</html>
