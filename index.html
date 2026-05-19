@@ -742,6 +742,16 @@
 
 <script>
 const URL_WHATSAPP = 'https://wa.me/5545991380126?text=Ol%C3%A1%2C%20preenchi%20o%20formul%C3%A1rio%20de%20qualifica%C3%A7%C3%A3o%20financeira%20e%20gostaria%20de%20agendar%20minha%20reuni%C3%A3o%20de%20alinhamento%20gratuita.';
+
+const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+const utms = (function () {
+  const params = new URLSearchParams(window.location.search);
+  const result = {};
+  UTM_KEYS.forEach(key => {
+    result[key] = params.get(key) || 'Direto';
+  });
+  return result;
+})();
 const URL_VIDAS_REAIS = 'https://labdefinancas.com.br';
 
 const RESULTS = {
@@ -1074,6 +1084,11 @@ function collectLeadData(resultKey) {
     '12 - Direcionamento': direcionamento,
     '13 - Página de origem': window.location.href,
     '14 - Data do envio': new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }),
+    '15 - UTM Origem': utms.utm_source,
+    '16 - UTM Mídia': utms.utm_medium,
+    '17 - UTM Campanha': utms.utm_campaign,
+    '18 - UTM Conteúdo': utms.utm_content,
+    '19 - UTM Termo': utms.utm_term,
   };
 }
 
