@@ -457,13 +457,26 @@
       animation: rise 0.4s cubic-bezier(0.22,1,0.36,1) both;
     }
 
-    .cal-screen .step-title { margin-bottom: 0.35rem; }
+    .cal-screen {
+      text-align: center;
+    }
+
+    .cal-screen .step-tag {
+      display: none;
+    }
+
+    .cal-screen .step-title {
+      font-family: 'Halyard', system-ui, sans-serif;
+      font-size: clamp(1.5rem, 3.5vw, 2rem);
+      margin-bottom: 0.4rem;
+    }
 
     .cal-screen .cal-sub {
-      font-size: 0.93rem;
+      font-size: 0.95rem;
       color: var(--text-mid);
       line-height: 1.8;
       margin-bottom: 1.5rem;
+      text-wrap: balance;
     }
 
     .cal-embed-wrap {
@@ -974,6 +987,7 @@ function showResult(resultKey) {
 function showCalScreen() {
   document.getElementById('leadForm').style.display = 'none';
   document.querySelector('.progress-wrap').style.display = 'none';
+  document.querySelector('.form-header').style.display = 'none';
   document.querySelector('.form-card').classList.add('cal-expanded');
   document.getElementById('calScreen').classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
