@@ -16,7 +16,7 @@
   t.src=v;s=b.getElementsByTagName(e)[0];
   s.parentNode.insertBefore(t,s)}(window, document,'script',
   'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', '788568174187293');
+  fbq('init', '27013560034921574');
   fbq('track', 'PageView');
   </script>
   <!-- End Meta Pixel Code -->
@@ -507,7 +507,7 @@
 </head>
 <body>
   <noscript><img height="1" width="1" style="display:none"
-  src="https://www.facebook.com/tr?id=788568174187293&ev=PageView&noscript=1"
+  src="https://www.facebook.com/tr?id=27013560034921574&ev=PageView&noscript=1"
   alt=""></noscript>
 
   <a class="logo" href="#">
@@ -972,11 +972,16 @@ function fireFinalSubmitButtonPixel(resultKey) {
   if (window.__finalSubmitButtonPixelFired || typeof fbq !== 'function') return;
   window.__finalSubmitButtonPixelFired = true;
 
-  fbq('trackCustom', 'ConcluirInscricao', {
-    content_name: 'Botão final de envio - Consultoria Individual',
-    content_category: resultKey === 'whatsapp' ? 'Agendamento Cal' : 'Vidas Reais',
+  const isQualified = resultKey === 'whatsapp';
+
+  // Evento padrão — usado como Custom Conversion com filtro content_category = 'Agendamento Cal'
+  fbq('track', 'CompleteRegistration', {
+    content_name: 'Formulário Consultoria Individual',
+    content_category: isQualified ? 'Agendamento Cal' : 'Vidas Reais',
     status: selectedText('dividas') === 'Sim' ? 'Com dívidas' : 'Sem dívidas',
     income_range: selectedText('faturamento'),
+    currency: 'BRL',
+    value: isQualified ? 8500 : 0,
   });
 }
 
@@ -1181,6 +1186,13 @@ document.getElementById('profissao').addEventListener('change', event => {
   document.getElementById('empresaWrap').classList.toggle('show', isEmpresario);
   if (!isEmpresario) document.getElementById('empresa_descricao').value = '';
   setError('empresa-descricao', false);
+
+  const faturamentoLabel = document.querySelector('#f-faturamento .lbl');
+  if (isEmpresario) {
+    faturamentoLabel.innerHTML = 'Qual o faturamento mensal da sua empresa? <span class="req">*</span>';
+  } else {
+    faturamentoLabel.innerHTML = 'Faturamento mensal líquido <span class="req">*</span>';
+  }
 });
 
 document.querySelectorAll('input, select').forEach(input => {
