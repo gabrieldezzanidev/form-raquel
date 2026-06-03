@@ -974,15 +974,18 @@ function fireFinalSubmitButtonPixel(resultKey) {
 
   const isQualified = resultKey === 'whatsapp';
 
-  // Evento padrão — usado como Custom Conversion com filtro content_category = 'Agendamento Cal'
-  fbq('track', 'CompleteRegistration', {
-    content_name: 'Formulário Consultoria Individual',
-    content_category: isQualified ? 'Agendamento Cal' : 'Vidas Reais',
-    status: selectedText('dividas') === 'Sim' ? 'Com dívidas' : 'Sem dívidas',
-    income_range: selectedText('faturamento'),
-    currency: 'BRL',
-    value: isQualified ? 8500 : 0,
-  });
+  // CompleteRegistration só dispara para leads qualificados (renda 12k+)
+  // Vidas Reais não gera sinal de conversão — evita contaminar o aprendizado da campanha
+  if (isQualified) {
+    fbq('track', 'CompleteRegistration', {
+      content_name: 'Formulário Consultoria Individual',
+      content_category: 'Agendamento Cal',
+      status: selectedText('dividas') === 'Sim' ? 'Com dívidas' : 'Sem dívidas',
+      income_range: selectedText('faturamento'),
+      currency: 'BRL',
+      value: 8500,
+    });
+  }
 }
 
 function showResult(resultKey) {
