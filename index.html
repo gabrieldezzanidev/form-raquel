@@ -254,6 +254,30 @@
       pointer-events: none;
     }
 
+    .field textarea {
+      width: 100%;
+      padding: 0.78rem 1rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      font-family: 'DMSans', sans-serif;
+      font-size: 0.93rem;
+      color: var(--text);
+      background: var(--input-bg);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+      resize: vertical;
+      min-height: 90px;
+      line-height: 1.6;
+    }
+
+    .field textarea::placeholder { color: #C5BB9A; }
+
+    .field textarea:focus {
+      border-color: var(--gold-dark);
+      box-shadow: 0 0 0 4px var(--gold-ring);
+      background: #fff;
+    }
+
     .field input::placeholder { color: #C5BB9A; }
 
     .field input:focus,
@@ -439,6 +463,7 @@
       line-height: 1.8;
       max-width: 420px;
       margin: 1rem auto 0;
+      text-wrap: balance;
     }
 
     .result-screen .btn-primary {
@@ -447,52 +472,37 @@
       text-decoration: none;
     }
 
-    .cal-screen {
+    .whatsapp-screen {
       display: none;
-      padding: 0.5rem 0;
+      text-align: center;
+      padding: 1.5rem 0 0.5rem;
     }
 
-    .cal-screen.active {
+    .whatsapp-screen.active {
       display: block;
       animation: rise 0.4s cubic-bezier(0.22,1,0.36,1) both;
     }
 
-    .cal-screen {
-      text-align: center;
-    }
-
-    .cal-screen .step-tag {
-      display: none;
-    }
-
-    .cal-screen .step-title {
-      font-family: 'Halyard', system-ui, sans-serif;
-      font-size: clamp(1.5rem, 3.5vw, 2rem);
-      margin-bottom: 0.4rem;
-    }
-
-    .cal-screen .cal-sub {
-      font-size: 0.95rem;
+    .whatsapp-screen p {
+      font-size: 0.93rem;
       color: var(--text-mid);
       line-height: 1.8;
-      margin-bottom: 1.5rem;
+      max-width: 420px;
+      margin: 1rem auto 0;
       text-wrap: balance;
-      max-width: 520px;
-      margin-left: auto;
-      margin-right: auto;
     }
 
-    .cal-embed-wrap {
+    .whatsapp-screen .btn-primary {
       width: 100%;
-      min-height: 600px;
-      overflow: scroll;
+      margin-top: 1.8rem;
+      text-decoration: none;
+      background: #25D366;
+      box-shadow: 0 4px 16px rgba(37,211,102,.35);
     }
 
-    .form-card.cal-expanded {
-      max-width: 1280px;
-      background: transparent;
-      box-shadow: none;
-      padding: 0;
+    .whatsapp-screen .btn-primary:hover {
+      background: #1ebe5a;
+      box-shadow: 0 6px 22px rgba(37,211,102,.45);
     }
 
     @media (max-width: 600px) {
@@ -591,41 +601,95 @@
         </div>
       </section>
 
+      <!-- Etapa 3: Dívidas -->
       <section class="step" data-step="2">
         <div class="step-tag">Etapa 3</div>
-        <h2 class="step-title">Sua realidade financeira</h2>
-        <p class="step-sub">Selecione a opção que melhor descreve o momento atual.</p>
-
-        <div class="field" id="f-faturamento">
-          <label class="lbl" for="faturamento">Faturamento mensal líquido <span class="req">*</span></label>
-          <div class="select-wrap">
-            <select id="faturamento" required>
-              <option value="">Selecione uma faixa</option>
-              <option value="0-3000">R$ 0 a R$ 3.000</option>
-              <option value="3000-7000">R$ 3.000 a R$ 7.000</option>
-              <option value="7000-12000">R$ 7.000 a R$ 12.000</option>
-              <option value="12000-15000">R$ 12.000 a R$ 15.000</option>
-              <option value="15000+">Acima de R$ 15.000</option>
-            </select>
-          </div>
-          <div class="ferr">Por favor, selecione seu faturamento.</div>
-        </div>
+        <h2 class="step-title">Você possui dívidas atualmente?</h2>
+        <p class="step-sub">Isso vai nos ajudar a entender o seu momento.</p>
 
         <div class="field" id="f-dividas">
-          <label class="lbl" for="dividas">Você possui dívidas atualmente? <span class="req">*</span></label>
-          <div class="select-wrap">
-            <select id="dividas" required>
-              <option value="">Selecione uma opção</option>
-              <option value="sim">Sim</option>
-              <option value="nao">Não</option>
-            </select>
+          <div class="radio-group">
+            <label class="radio-opt">
+              <input type="radio" name="dividas" value="sim" required>
+              <span class="opt-label">Sim, tenho dívidas</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="dividas" value="nao" required>
+              <span class="opt-label">Não, estou livre de dívidas</span>
+            </label>
           </div>
           <div class="ferr">Por favor, selecione uma opção.</div>
         </div>
 
         <div class="btn-row">
           <button class="btn btn-back" type="button" data-back>Voltar</button>
-          <button class="btn btn-primary" id="noDebtNext" type="button" data-next>Continuar</button>
+          <button class="btn btn-primary" type="button" data-next>Continuar</button>
+        </div>
+      </section>
+
+      <!-- Etapa 4: Faturamento (condicional) -->
+      <section class="step" data-step="3">
+        <div class="step-tag">Etapa 4</div>
+        <h2 class="step-title" id="faturamentoTitle">Faturamento mensal líquido</h2>
+        <p class="step-sub">Uma estimativa já é suficiente.</p>
+
+        <div class="field" id="f-faturamento">
+          <!-- Opções para endividados -->
+          <div class="radio-group" id="faturamento-debt-opts" style="display:none">
+            <label class="radio-opt">
+              <input type="radio" name="faturamento" value="0-3000">
+              <span class="opt-label">R$ 0 a R$ 3.000</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="faturamento" value="3000-7000">
+              <span class="opt-label">R$ 3.000 a R$ 7.000</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="faturamento" value="7000-12000">
+              <span class="opt-label">R$ 7.000 a R$ 12.000</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="faturamento" value="12000-15000">
+              <span class="opt-label">R$ 12.000 a R$ 15.000</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="faturamento" value="15000+">
+              <span class="opt-label">Acima de R$ 15.000</span>
+            </label>
+          </div>
+          <!-- Opções para sem dívidas -->
+          <div class="radio-group" id="faturamento-nodebt-opts" style="display:none">
+            <label class="radio-opt">
+              <input type="radio" name="faturamento" value="0-3000">
+              <span class="opt-label">R$ 0 a R$ 3.000</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="faturamento" value="3000-7000">
+              <span class="opt-label">R$ 3.000 a R$ 7.000</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="faturamento" value="7000-9000">
+              <span class="opt-label">R$ 7.000 a R$ 9.000</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="faturamento" value="9000-12000">
+              <span class="opt-label">R$ 9.000 a R$ 12.000</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="faturamento" value="12000-15000">
+              <span class="opt-label">R$ 12.000 a R$ 15.000</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="faturamento" value="15000+">
+              <span class="opt-label">Acima de R$ 15.000</span>
+            </label>
+          </div>
+          <div class="ferr">Por favor, selecione seu faturamento.</div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-back" type="button" data-back>Voltar</button>
+          <button class="btn btn-primary" type="button" data-next>Continuar</button>
         </div>
       </section>
 
@@ -687,42 +751,24 @@
 
         <div class="btn-row">
           <button class="btn btn-back" type="button" data-back>Voltar</button>
-          <button class="btn btn-primary" type="button" data-next>Continuar</button>
-        </div>
-      </section>
-
-      <section class="step" data-step="4" data-branch="invest">
-        <div class="step-tag">Última etapa</div>
-        <h2 class="step-title">Próximo passo</h2>
-        <p class="step-sub">Uma última pergunta para definir o direcionamento.</p>
-
-        <div class="field" id="f-investimento">
-          <label class="lbl">Você estaria disposto(a) a investir pelo menos R$ 1.000 por mês para organizar sua vida financeira de vez? <span class="req">*</span></label>
-          <div class="radio-group">
-            <label class="radio-opt">
-              <input type="radio" name="investimento" value="sim" required>
-              <span class="opt-label">Sim</span>
-            </label>
-            <label class="radio-opt">
-              <input type="radio" name="investimento" value="nao" required>
-              <span class="opt-label">Não</span>
-            </label>
-          </div>
-          <div class="ferr">Por favor, selecione uma opção.</div>
-        </div>
-
-        <div class="btn-row">
-          <button class="btn btn-back" type="button" data-back>Voltar</button>
           <button class="btn btn-primary" id="submitNoDebt" type="button">Enviar</button>
         </div>
       </section>
+
     </form>
 
-    <section class="cal-screen" id="calScreen" aria-live="polite">
+    <section class="whatsapp-screen" id="whatsappScreen" aria-live="polite">
+      <div class="result-icon">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none"
+             stroke="#D4AF1A" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
       <div class="step-tag">Próximo passo</div>
-      <h2 class="step-title">Agende sua reunião de alinhamento</h2>
-      <p class="cal-sub">Ótimo perfil! O próximo passo é agendar uma conversa de alinhamento gratuita com a nossa equipe. Escolha o melhor dia e horário para você abaixo.</p>
-      <div class="cal-embed-wrap" id="my-cal-inline-reuniao-alinhamento-raquel-alvares-financas"></div>
+      <h2 class="step-title">Você foi selecionado(a) para uma conversa de alinhamento</h2>
+      <p>Pelo seu perfil, o próximo passo é entrar em contato com a nossa equipe pelo WhatsApp para agendar sua reunião de alinhamento gratuita.</p>
+      <a class="btn btn-primary" id="whatsappBtn" href="#" target="_blank" rel="noopener">Agendar reunião gratuita</a>
     </section>
 
     <section class="result-screen" id="resultScreen" aria-live="polite">
@@ -752,7 +798,7 @@ const utms = (function () {
   });
   return result;
 })();
-const URL_VIDAS_REAIS = 'https://labdefinancas.com.br';
+const URL_COMUNIDADE = 'https://chat.whatsapp.com/JxeUixq8N8e2SF7ZGxYDBu';
 
 const RESULTS = {
   whatsapp: {
@@ -762,41 +808,42 @@ const RESULTS = {
     button: 'Agendar pelo WhatsApp',
     url: URL_WHATSAPP,
   },
-  vidas: {
-    tag: 'Próximo passo',
-    title: 'O Vidas Reais é o melhor caminho agora',
-    message: 'No momento, pelo perfil informado, o próximo passo indicado é o Vidas Reais: um grupo de estudos para te ajudar a ganhar clareza, organizar sua vida financeira e evoluir com orientação antes de avançar para uma consultoria individual.',
-    button: 'Conhecer o Vidas Reais',
-    url: URL_VIDAS_REAIS,
+  endividado: {
+    tag: 'Seu perfil é endividado',
+    title: 'Seu perfil é endividado',
+    message: 'A falta do controle financeiro não te dá clareza de como agir, acesse a nossa comunidade gratuita e fique mais próximo da Raquel e de uma vida financeira mais plena.',
+    button: 'Entrar na comunidade gratuita',
+    url: URL_COMUNIDADE,
+  },
+  desorganizado: {
+    tag: 'Seu perfil é desorganizado',
+    title: 'Seu perfil é desorganizado',
+    message: 'Um ponto positivo é que você não tem dívidas, já está à frente de muitos brasileiros, entre na comunidade gratuita e fique mais próximo da Raquel e de uma vida financeira mais plena.',
+    button: 'Entrar na comunidade gratuita',
+    url: URL_COMUNIDADE,
   },
 };
 
 const state = {
   step: 0,
   branch: '',
-  path: [0, 1, 2],
+  path: [0, 1, 2, 3],
 };
 
 const fieldsByStep = {
   0: ['nome', 'email'],
   1: ['telefone', 'profissao'],
-  2: ['faturamento', 'dividas'],
+  2: ['dividas'],
+  3: ['faturamento'],
   debt: ['origem'],
   noDebt: ['situacao'],
-  invest: ['investimento'],
 };
 
 function visibleSteps() {
-  const dividas = value('dividas');
-  const highIncome = isHighIncome();
-  const steps = [0, 1, 2];
-
+  const dividas = radioValue('dividas');
+  const steps = [0, 1, 2, 3];
   if (dividas === 'sim') steps.push('debt');
-  if (dividas === 'nao') {
-    steps.push('noDebt');
-    if (highIncome) steps.push('invest');
-  }
-
+  if (dividas === 'nao') steps.push('noDebt');
   return steps;
 }
 
@@ -834,40 +881,59 @@ function showStep(key) {
   if (key === 'invest') selector = '.step[data-branch="invest"]';
 
   document.querySelector(selector).classList.add('active');
-  updateNoDebtCta();
   updateProgress();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function updateNoDebtCta() {
-  const button = document.getElementById('noDebtNext');
-  if (!button) return;
-  button.textContent = isHighIncome() ? 'Continuar' : 'Enviar';
-}
 
 function nextStep() {
   const key = currentStepKey();
   if (!validateStep(key)) return;
 
   if (key === 2) {
-    const next = value('dividas') === 'sim' ? 'debt' : 'noDebt';
-    state.path = [0, 1, 2, next];
+    // após dívidas → mostrar faturamento com opções corretas
+    updateFaturamentoOpts();
+    state.path = [0, 1, 2, 3];
+    showStep(3);
+    return;
+  }
+
+  if (key === 3) {
+    // após faturamento → ir para branch de dívidas ou sem dívidas
+    const dividas = radioValue('dividas');
+    const next = dividas === 'sim' ? 'debt' : 'noDebt';
+    state.path = [0, 1, 2, 3, next];
     showStep(next);
     return;
   }
 
   if (key === 'noDebt') {
-    if (isHighIncome()) {
-      state.path = [0, 1, 2, 'noDebt', 'invest'];
-      showStep('invest');
-    } else {
-      submitForm(document.querySelector('[data-branch="no-debt"] .btn-primary'), routeNoDebt());
-    }
+    submitForm(document.querySelector('[data-branch="no-debt"] .btn-primary'), routeNoDebt());
     return;
   }
 
-  const steps = [0, 1, 2];
+  const steps = [0, 1, 2, 3];
   showStep(steps[steps.indexOf(key) + 1]);
+}
+
+function updateFaturamentoOpts() {
+  const dividas = radioValue('dividas');
+  const debtOpts   = document.getElementById('faturamento-debt-opts');
+  const nodebtOpts = document.getElementById('faturamento-nodebt-opts');
+  const title      = document.getElementById('faturamentoTitle');
+
+  // Limpa seleção anterior de faturamento
+  document.querySelectorAll('input[name="faturamento"]').forEach(r => r.checked = false);
+
+  if (dividas === 'sim') {
+    debtOpts.style.display   = 'flex';
+    nodebtOpts.style.display = 'none';
+    title.textContent = 'Qual é o seu faturamento mensal líquido?';
+  } else {
+    debtOpts.style.display   = 'none';
+    nodebtOpts.style.display = 'flex';
+    title.textContent = 'Qual é o seu faturamento mensal líquido?';
+  }
 }
 
 function previousStep() {
@@ -902,6 +968,8 @@ function validateStep(key) {
 
     if (id === 'email') invalid = !validEmail(value('email'));
     else if (id === 'investimento') invalid = !radioValue('investimento');
+    else if (id === 'dividas')      invalid = !radioValue('dividas');
+    else if (id === 'faturamento')  invalid = !radioValue('faturamento');
     else invalid = !value(id);
 
     setError(id, invalid);
@@ -928,25 +996,22 @@ function validateStep(key) {
 }
 
 function isHighIncome() {
-  return ['12000-15000', '15000+'].includes(value('faturamento'));
+  const faturamento = radioValue('faturamento');
+  const dividas = radioValue('dividas');
+  if (dividas === 'sim') return ['12000-15000', '15000+'].includes(faturamento);
+  return ['9000-12000', '12000-15000', '15000+'].includes(faturamento);
 }
 
 function routeDebt() {
-  const faturamento = value('faturamento');
-  const origem = value('origem');
-  const consignado = origem === 'consignado' ? Number(value('consignado') || 0) : 0;
-
-  if (faturamento === '15000+') return 'whatsapp';
-  if (faturamento === '12000-15000' && consignado < 3000) return 'whatsapp';
-  return 'vidas';
+  const faturamento = radioValue('faturamento');
+  if (['12000-15000', '15000+'].includes(faturamento)) return 'whatsapp';
+  return 'endividado';
 }
 
 function routeNoDebt() {
-  const faturamento = value('faturamento');
-  const investimento = radioValue('investimento');
-
-  if (['12000-15000', '15000+'].includes(faturamento) && investimento === 'sim') return 'whatsapp';
-  return 'vidas';
+  const faturamento = radioValue('faturamento');
+  if (['9000-12000', '12000-15000', '15000+'].includes(faturamento)) return 'whatsapp';
+  return 'desorganizado';
 }
 
 async function submitForm(button, resultKey) {
@@ -979,9 +1044,9 @@ function fireFinalSubmitButtonPixel(resultKey) {
   if (isQualified) {
     fbq('track', 'CompleteRegistration', {
       content_name: 'Formulário Consultoria Individual',
-      content_category: 'Agendamento Cal',
-      status: selectedText('dividas') === 'Sim' ? 'Com dívidas' : 'Sem dívidas',
-      income_range: selectedText('faturamento'),
+      content_category: 'WhatsApp - Reunião de Alinhamento',
+      status: radioValue('dividas') === 'sim' ? 'Com dívidas' : 'Sem dívidas',
+      income_range: radioText('faturamento'),
       currency: 'BRL',
       value: 8500,
     });
@@ -990,7 +1055,7 @@ function fireFinalSubmitButtonPixel(resultKey) {
 
 function showResult(resultKey) {
   if (resultKey === 'whatsapp') {
-    showCalScreen();
+    showWhatsAppScreen();
     return;
   }
 
@@ -1006,76 +1071,37 @@ function showResult(resultKey) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function showCalScreen() {
+function showWhatsAppScreen() {
   document.getElementById('leadForm').style.display = 'none';
   document.querySelector('.progress-wrap').style.display = 'none';
   document.querySelector('.form-header').style.display = 'none';
-  document.querySelector('.form-card').classList.add('cal-expanded');
-  document.getElementById('calScreen').classList.add('active');
+  const screen = document.getElementById('whatsappScreen');
+  document.getElementById('whatsappBtn').href = URL_WHATSAPP;
+  screen.classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
-  loadCalEmbed();
 }
 
-function loadCalEmbed() {
-  if (window.__calLoaded) return;
-  window.__calLoaded = true;
+document.getElementById('whatsappBtn').addEventListener('click', function () {
+  if (window.__whatsappBtnPixelFired || typeof fbq !== 'function') return;
+  window.__whatsappBtnPixelFired = true;
 
-  (function (C, A, L) {
-    let p = function (a, ar) { a.q.push(ar); };
-    let d = C.document;
-    C.Cal = C.Cal || function () {
-      let cal = C.Cal; let ar = arguments;
-      if (!cal.loaded) {
-        cal.ns = {}; cal.q = cal.q || [];
-        d.head.appendChild(d.createElement("script")).src = A;
-        cal.loaded = true;
-      }
-      if (ar[0] === L) {
-        const api = function () { p(api, arguments); };
-        const namespace = ar[1];
-        api.q = api.q || [];
-        if (typeof namespace === "string") {
-          cal.ns[namespace] = cal.ns[namespace] || api;
-          p(cal.ns[namespace], ar);
-          p(cal, ["initNamespace", namespace]);
-        } else p(cal, ar);
-        return;
-      }
-      p(cal, ar);
-    };
-  })(window, "https://app.cal.com/embed/embed.js", "init");
-
-  Cal("init", "reuniao-alinhamento-raquel-alvares-financas", { origin: "https://app.cal.com" });
-
-  Cal.ns["reuniao-alinhamento-raquel-alvares-financas"]("inline", {
-    elementOrSelector: "#my-cal-inline-reuniao-alinhamento-raquel-alvares-financas",
-    config: { "layout": "month_view", "useSlotsViewOnSmallScreen": "true" },
-    calLink: "gabriel-dezzani-pitzer-13ogey/reuniao-alinhamento-raquel-alvares-financas",
+  fbq('track', 'Lead', {
+    content_name: 'Clique WhatsApp - Reunião de Alinhamento',
+    content_category: 'WhatsApp - Reunião de Alinhamento',
+    currency: 'BRL',
+    status: radioValue('dividas') === 'sim' ? 'Com dívidas' : 'Sem dívidas',
+    income_range: radioText('faturamento'),
   });
-
-  Cal.ns["reuniao-alinhamento-raquel-alvares-financas"]("ui", { "hideEventTypeDetails": false, "layout": "month_view" });
-
-  Cal.ns["reuniao-alinhamento-raquel-alvares-financas"]("on", {
-    action: "bookingSuccessful",
-    callback: function () {
-      if (window.__calBookingPixelFired || typeof fbq !== 'function') return;
-      window.__calBookingPixelFired = true;
-
-      fbq('track', 'Lead', {
-        content_name: 'Agendamento confirmado - Reunião de Alinhamento',
-        content_category: 'Cal - Reunião de Alinhamento',
-        currency: 'BRL',
-        status: selectedText('dividas') === 'Sim' ? 'Com dívidas' : 'Sem dívidas',
-        income_range: selectedText('faturamento'),
-      });
-    },
-  });
-}
+});
 
 function collectLeadData(resultKey) {
   const origem = value('origem');
   const hasConsignado = origem === 'consignado';
-  const direcionamento = resultKey === 'whatsapp' ? 'Agendamento Cal - reunião de alinhamento' : 'Vidas Reais';
+  const direcionamento = resultKey === 'whatsapp'
+    ? 'Botão WhatsApp - reunião de alinhamento'
+    : resultKey === 'endividado'
+      ? 'Comunidade - Perfil Endividado'
+      : 'Comunidade - Perfil Desorganizado';
 
   return {
     name: value('nome'),
@@ -1083,13 +1109,14 @@ function collectLeadData(resultKey) {
     phone: value('telefone'),
     '04 - Profissão': selectedText('profissao'),
     '05 - Do que se trata a empresa': value('profissao') === 'empresario' ? value('empresa_descricao') : 'Não se aplica',
-    '06 - Faturamento mensal líquido': selectedText('faturamento'),
-    '07 - Possui dívidas atualmente': selectedText('dividas'),
+    '06 - Faturamento mensal líquido': radioText('faturamento'),
+    '07 - Possui dívidas atualmente': radioText('dividas'),
     '08 - Origem das dívidas': selectedText('origem') || 'Não se aplica',
     '09 - Valor descontado em folha pelo consignado': hasConsignado ? formatCurrency(value('consignado')) : 'Não se aplica',
     '10 - Situação financeira atual': selectedText('situacao') || 'Não se aplica',
     '11 - Disposto(a) a investir R$ 1.000/mês': radioText('investimento') || 'Não se aplica',
     '12 - Direcionamento': direcionamento,
+    '11b - Dívida que mais pesa': value('divida_peso') || 'Não se aplica',
     '13 - Página de origem': window.location.href,
     '14 - Data do envio': new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }),
     '15 - UTM Origem': utms.utm_source,
@@ -1171,7 +1198,7 @@ document.getElementById('submitDebt').addEventListener('click', event => {
 });
 
 document.getElementById('submitNoDebt').addEventListener('click', event => {
-  if (!validateStep('invest')) return;
+  if (!validateStep('noDebt')) return;
   submitForm(event.currentTarget, routeNoDebt());
 });
 
@@ -1182,23 +1209,14 @@ document.getElementById('origem').addEventListener('change', event => {
   setError('consignado', false);
 });
 
-document.getElementById('faturamento').addEventListener('change', updateNoDebtCta);
-
 document.getElementById('profissao').addEventListener('change', event => {
   const isEmpresario = event.target.value === 'empresario';
   document.getElementById('empresaWrap').classList.toggle('show', isEmpresario);
   if (!isEmpresario) document.getElementById('empresa_descricao').value = '';
   setError('empresa-descricao', false);
-
-  const faturamentoLabel = document.querySelector('#f-faturamento .lbl');
-  if (isEmpresario) {
-    faturamentoLabel.innerHTML = 'Qual o faturamento mensal da sua empresa? <span class="req">*</span>';
-  } else {
-    faturamentoLabel.innerHTML = 'Faturamento mensal líquido <span class="req">*</span>';
-  }
 });
 
-document.querySelectorAll('input, select').forEach(input => {
+document.querySelectorAll('input, select, textarea').forEach(input => {
   input.addEventListener('input', () => {
     const field = input.closest('.field');
     if (field) field.classList.remove('err');
