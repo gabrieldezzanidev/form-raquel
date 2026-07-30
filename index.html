@@ -1147,7 +1147,8 @@ async function submitToFormspree(data) {
 }
 
 async function submitToCrm(data) {
-  const res = await fetch('https://crm-raquel.vercel.app/api/public/form-submission', {
+  // passa pelo proxy do próprio site: o segredo fica no servidor, não no navegador
+  const res = await fetch('/api/lead', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
     body: JSON.stringify(data),
