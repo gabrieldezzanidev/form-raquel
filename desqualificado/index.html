@@ -38,52 +38,52 @@
       font-family:'DMSans', system-ui, sans-serif;
       background:var(--bg); color:var(--text); min-height:100vh;
       display:flex; flex-direction:column; align-items:center; justify-content:center;
-      padding:3.5rem 1.25rem 4.5rem; text-align:center;
+      padding:3rem 1.25rem 4rem; text-align:center;
     }
 
-    .logo { margin-bottom:2.5rem; display:block; }
-    .logo img { height:110px; width:auto; }
+    .logo { margin-bottom:2rem; display:block; }
+    .logo img { height:90px; width:auto; }
 
-    .card { width:100%; max-width:680px; }
+    .card { width:100%; max-width:540px; }
 
     .result-icon {
-      width:96px; height:96px; background:var(--gold-light); border-radius:50%;
-      display:flex; align-items:center; justify-content:center; margin:0 auto 2rem;
+      width:78px; height:78px; background:var(--gold-light); border-radius:50%;
+      display:flex; align-items:center; justify-content:center; margin:0 auto 1.6rem;
     }
 
     .step-tag {
-      display:inline-block; font-size:0.82rem; font-weight:600; letter-spacing:0.1em;
+      display:inline-block; font-size:0.74rem; font-weight:600; letter-spacing:0.1em;
       text-transform:uppercase; color:var(--gold-dark); background:var(--gold-light);
-      padding:0.35rem 1rem; border-radius:var(--radius-pill); margin-bottom:1.2rem;
+      padding:0.3rem 0.9rem; border-radius:var(--radius-pill); margin-bottom:1rem;
     }
 
     .step-title {
       font-family:'Halyard', system-ui, sans-serif; font-weight:400;
-      font-size:clamp(2rem, 5vw, 3rem); line-height:1.2; color:var(--text);
-      margin-bottom:0.5rem; text-wrap:balance;
+      font-size:clamp(1.6rem, 3.5vw, 2.1rem); line-height:1.22; color:var(--text);
+      margin-bottom:0.4rem; text-wrap:balance;
     }
 
     p.msg {
-      font-size:clamp(1.05rem, 2.2vw, 1.3rem); color:var(--text-mid); line-height:1.75;
-      max-width:560px; margin:1.3rem auto 0; text-wrap:balance;
+      font-size:clamp(1rem, 1.8vw, 1.12rem); color:var(--text-mid); line-height:1.75;
+      max-width:480px; margin:1.1rem auto 0; text-wrap:balance;
     }
 
     .btn {
-      font-family:'DMSans', sans-serif; font-size:1.2rem; font-weight:600;
+      font-family:'DMSans', sans-serif; font-size:1.05rem; font-weight:600;
       border:none; border-radius:var(--radius-pill); cursor:pointer;
-      display:inline-flex; align-items:center; justify-content:center; gap:0.6rem;
-      min-height:68px; width:100%; max-width:520px; padding:1.1rem 2.4rem; margin:2.4rem auto 0;
+      display:inline-flex; align-items:center; justify-content:center; gap:0.55rem;
+      min-height:58px; width:100%; max-width:440px; padding:1rem 2.2rem; margin:2rem auto 0;
       text-decoration:none; transition:all 0.2s ease;
-      background:var(--gold); color:var(--text); box-shadow:0 6px 22px rgba(247,213,75,.5);
+      background:var(--gold); color:var(--text); box-shadow:0 5px 18px rgba(247,213,75,.5);
     }
-    .btn:hover { background:#f0cb2a; box-shadow:0 8px 28px rgba(247,213,75,.6); transform:translateY(-1px); }
+    .btn:hover { background:#f0cb2a; box-shadow:0 7px 24px rgba(247,213,75,.6); transform:translateY(-1px); }
 
-    .foot { margin-top:2rem; font-size:0.9rem; color:#9A9080; }
+    .foot { margin-top:1.7rem; font-size:0.85rem; color:#9A9080; }
 
     @media (max-width:600px) {
-      body { padding:2.5rem 1rem 3.5rem; }
-      .logo img { height:84px; }
-      .result-icon { width:80px; height:80px; }
+      body { padding:2.25rem 1rem 3.25rem; }
+      .logo img { height:72px; }
+      .result-icon { width:70px; height:70px; }
     }
   </style>
 </head>
@@ -92,7 +92,7 @@
 
   <div class="card">
     <div class="result-icon">
-      <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#D4AF1A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#D4AF1A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="20 6 9 17 4 12"/>
       </svg>
     </div>
