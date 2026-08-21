@@ -30,30 +30,34 @@
     *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
 
     :root {
-      --bg:#fafafa; --gold:#F7D54B; --gold-dark:#D4AF1A; --gold-light:rgba(247,213,75,.18);
-      --text:#181818; --text-mid:#555248; --border:#EAE0C0; --radius-pill:9999px;
+      --bg:#fafafa; --surface:#FFFCD9; --gold:#F7D54B; --gold-dark:#D4AF1A;
+      --gold-light:rgba(247,213,75,.18); --text:#181818; --text-mid:#555248; --radius-pill:9999px;
     }
 
     body {
       font-family:'DMSans', system-ui, sans-serif;
       background:var(--bg); color:var(--text); min-height:100vh;
       display:flex; flex-direction:column; align-items:center; justify-content:center;
-      padding:3rem 1.25rem 4rem; text-align:center;
+      padding:3rem 1.25rem 4rem;
     }
 
-    .logo { margin-bottom:2rem; display:block; }
+    .logo { margin-bottom:2rem; display:block; text-align:center; }
     .logo img { height:90px; width:auto; }
 
-    .card { width:100%; max-width:540px; }
+    .card {
+      width:100%; max-width:560px; background:var(--surface);
+      border-radius:20px; padding:2.75rem 2.25rem 2.5rem; text-align:center;
+      box-shadow: 0 2px 6px rgba(181,140,0,.08), 0 16px 48px rgba(181,140,0,.14);
+    }
 
     .result-icon {
-      width:78px; height:78px; background:var(--gold-light); border-radius:50%;
-      display:flex; align-items:center; justify-content:center; margin:0 auto 1.6rem;
+      width:82px; height:82px; background:rgba(247,213,75,.5); border-radius:50%;
+      display:flex; align-items:center; justify-content:center; margin:0 auto 1.5rem;
     }
 
     .step-tag {
       display:inline-block; font-size:0.74rem; font-weight:600; letter-spacing:0.1em;
-      text-transform:uppercase; color:var(--gold-dark); background:var(--gold-light);
+      text-transform:uppercase; color:var(--gold-dark); background:rgba(247,213,75,.32);
       padding:0.3rem 0.9rem; border-radius:var(--radius-pill); margin-bottom:1rem;
     }
 
@@ -65,25 +69,23 @@
 
     p.msg {
       font-size:clamp(1rem, 1.8vw, 1.12rem); color:var(--text-mid); line-height:1.75;
-      max-width:480px; margin:1.1rem auto 0; text-wrap:balance;
+      max-width:440px; margin:1.1rem auto 0; text-wrap:balance;
     }
 
     .btn {
       font-family:'DMSans', sans-serif; font-size:1.05rem; font-weight:600;
       border:none; border-radius:var(--radius-pill); cursor:pointer;
       display:inline-flex; align-items:center; justify-content:center; gap:0.55rem;
-      min-height:58px; width:100%; max-width:440px; padding:1rem 2.2rem; margin:2rem auto 0;
+      min-height:58px; width:100%; padding:1rem 2.2rem; margin-top:2rem;
       text-decoration:none; transition:all 0.2s ease;
-      background:var(--gold); color:var(--text); box-shadow:0 5px 18px rgba(247,213,75,.5);
+      background:var(--gold); color:var(--text); box-shadow:0 6px 20px rgba(212,175,26,.35);
     }
-    .btn:hover { background:#f0cb2a; box-shadow:0 7px 24px rgba(247,213,75,.6); transform:translateY(-1px); }
-
-    .foot { margin-top:1.7rem; font-size:0.85rem; color:#9A9080; }
+    .btn:hover { background:#f0cb2a; box-shadow:0 8px 26px rgba(212,175,26,.45); transform:translateY(-1px); }
 
     @media (max-width:600px) {
       body { padding:2.25rem 1rem 3.25rem; }
       .logo img { height:72px; }
-      .result-icon { width:70px; height:70px; }
+      .card { padding:2rem 1.25rem 1.75rem; border-radius:16px; }
     }
   </style>
 </head>
@@ -92,19 +94,17 @@
 
   <div class="card">
     <div class="result-icon">
-      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#D4AF1A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#D4AF1A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="20 6 9 17 4 12"/>
       </svg>
     </div>
-    <div class="step-tag">Perfil recebido</div>
-    <h1 class="step-title">Recebemos suas respostas 💛</h1>
-    <p class="msg">Obrigada por responder! Nossa equipe vai analisar seu perfil e entrar em contato com você em breve. Enquanto isso, entra na nossa comunidade gratuita pra ficar mais perto da Raquel e já começar a organizar sua vida financeira.</p>
+    <div class="step-tag">Seu perfil é endividado</div>
+    <h1 class="step-title">Seu perfil é endividado</h1>
+    <p class="msg">A falta do controle financeiro não te dá clareza de como agir, acesse a nossa comunidade gratuita e fique mais próximo da Raquel e de uma vida financeira mais plena.</p>
 
     <a class="btn" href="https://chat.whatsapp.com/JxeUixq8N8e2SF7ZGxYDBu" target="_blank" rel="noopener">
       Entrar na comunidade gratuita
     </a>
-
-    <p class="foot">Raquel Alvares Finanças</p>
   </div>
 </body>
 </html>
