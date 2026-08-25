@@ -539,9 +539,9 @@
   <main class="form-card">
     <form id="leadForm" novalidate>
       <section class="step active" data-step="0">
-        <div class="step-tag">Etapa 1</div>
+        <div class="step-tag">Etapa 1 de 4</div>
         <h2 class="step-title">Vamos começar</h2>
-        <p class="step-sub">Primeiro, seus dados de contato.</p>
+        <p class="step-sub">Seus dados de contato para a nossa equipe falar com você.</p>
 
         <div class="field" id="f-nome">
           <label class="lbl" for="nome">Nome completo <span class="req">*</span></label>
@@ -555,67 +555,47 @@
           <div class="ferr">Por favor, informe um e-mail válido.</div>
         </div>
 
-        <div class="btn-row">
-          <button class="btn btn-primary" type="button" data-next>Continuar</button>
-        </div>
-      </section>
-
-      <section class="step" data-step="1">
-        <div class="step-tag">Etapa 2</div>
-        <h2 class="step-title">Seu perfil</h2>
-        <p class="step-sub">Essas informações ajudam a orientar a análise.</p>
-
         <div class="field" id="f-telefone">
           <label class="lbl" for="telefone">Telefone / WhatsApp <span class="req">*</span></label>
           <input type="tel" id="telefone" autocomplete="tel" placeholder="(00) 00000-0000" required>
           <div class="ferr">Por favor, informe seu telefone.</div>
         </div>
 
-        <div class="field" id="f-profissao">
-          <label class="lbl" for="profissao">Profissão <span class="req">*</span></label>
-          <div class="select-wrap">
-            <select id="profissao" required>
-              <option value="">Selecione uma opção</option>
-              <option value="clt">Vínculo CLT</option>
-              <option value="pj">Vínculo PJ</option>
-              <option value="servidor-publico">Servidor público</option>
-              <option value="empresario">Empresário</option>
-            </select>
-          </div>
-          <div class="ferr">Por favor, selecione sua profissão.</div>
-        </div>
-
-        <div class="conditional" id="empresaWrap">
-          <div>
-            <div class="field" id="f-empresa-descricao">
-              <label class="lbl" for="empresa_descricao">Do que se trata a sua empresa? <span class="req">*</span></label>
-              <input type="text" id="empresa_descricao" placeholder="Ex: clínica, loja, prestadora de serviços..." required>
-              <div class="ferr">Por favor, conte do que se trata a sua empresa.</div>
-            </div>
-          </div>
-        </div>
-
         <div class="btn-row">
-          <button class="btn btn-back" type="button" data-back>Voltar</button>
           <button class="btn btn-primary" type="button" data-next>Continuar</button>
         </div>
       </section>
 
-      <!-- Etapa 3: Dívidas -->
-      <section class="step" data-step="2">
-        <div class="step-tag">Etapa 3</div>
-        <h2 class="step-title">Você possui dívidas atualmente?</h2>
-        <p class="step-sub">Isso vai nos ajudar a entender o seu momento.</p>
+      <section class="step" data-step="1">
+        <div class="step-tag">Etapa 2 de 4</div>
+        <h2 class="step-title">Qual tipo de dívida pesa mais hoje?</h2>
+        <p class="step-sub">Escolha a que mais representa o seu momento.</p>
 
-        <div class="field" id="f-dividas">
+        <div class="field" id="f-tipo_divida">
           <div class="radio-group">
             <label class="radio-opt">
-              <input type="radio" name="dividas" value="sim" required>
-              <span class="opt-label">Sim, tenho dívidas</span>
+              <input type="radio" name="tipo_divida" value="cartao" required>
+              <span class="opt-label">Cartão de crédito</span>
             </label>
             <label class="radio-opt">
-              <input type="radio" name="dividas" value="nao" required>
-              <span class="opt-label">Não, estou livre de dívidas</span>
+              <input type="radio" name="tipo_divida" value="cheque" required>
+              <span class="opt-label">Cheque especial</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="tipo_divida" value="emprestimo" required>
+              <span class="opt-label">Empréstimo pessoal ou consignado</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="tipo_divida" value="financiamento" required>
+              <span class="opt-label">Financiamento</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="tipo_divida" value="outra" required>
+              <span class="opt-label">Outra dívida</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="tipo_divida" value="sem-dividas" required>
+              <span class="opt-label">Não tenho dívidas</span>
             </label>
           </div>
           <div class="ferr">Por favor, selecione uma opção.</div>
@@ -627,64 +607,35 @@
         </div>
       </section>
 
-      <!-- Etapa 4: Faturamento (condicional) -->
-      <section class="step" data-step="3">
-        <div class="step-tag">Etapa 4</div>
-        <h2 class="step-title" id="faturamentoTitle">Faturamento mensal líquido</h2>
+      <section class="step" data-step="2">
+        <div class="step-tag">Etapa 3 de 4</div>
+        <h2 class="step-title">Qual é a sua renda mensal líquida?</h2>
         <p class="step-sub">Uma estimativa já é suficiente.</p>
 
         <div class="field" id="f-faturamento">
-          <!-- Opções para endividados -->
-          <div class="radio-group" id="faturamento-debt-opts" style="display:none">
+          <div class="radio-group">
             <label class="radio-opt">
-              <input type="radio" name="faturamento" value="0-3000">
+              <input type="radio" name="faturamento" value="0-3000" required>
               <span class="opt-label">R$ 0 a R$ 3.000</span>
             </label>
             <label class="radio-opt">
-              <input type="radio" name="faturamento" value="3000-7000">
+              <input type="radio" name="faturamento" value="3000-7000" required>
               <span class="opt-label">R$ 3.000 a R$ 7.000</span>
             </label>
             <label class="radio-opt">
-              <input type="radio" name="faturamento" value="7000-12000">
+              <input type="radio" name="faturamento" value="7000-12000" required>
               <span class="opt-label">R$ 7.000 a R$ 12.000</span>
             </label>
             <label class="radio-opt">
-              <input type="radio" name="faturamento" value="12000-15000">
+              <input type="radio" name="faturamento" value="12000-15000" required>
               <span class="opt-label">R$ 12.000 a R$ 15.000</span>
             </label>
             <label class="radio-opt">
-              <input type="radio" name="faturamento" value="15000+">
+              <input type="radio" name="faturamento" value="15000+" required>
               <span class="opt-label">Acima de R$ 15.000</span>
             </label>
           </div>
-          <!-- Opções para sem dívidas -->
-          <div class="radio-group" id="faturamento-nodebt-opts" style="display:none">
-            <label class="radio-opt">
-              <input type="radio" name="faturamento" value="0-3000">
-              <span class="opt-label">R$ 0 a R$ 3.000</span>
-            </label>
-            <label class="radio-opt">
-              <input type="radio" name="faturamento" value="3000-7000">
-              <span class="opt-label">R$ 3.000 a R$ 7.000</span>
-            </label>
-            <label class="radio-opt">
-              <input type="radio" name="faturamento" value="7000-9000">
-              <span class="opt-label">R$ 7.000 a R$ 9.000</span>
-            </label>
-            <label class="radio-opt">
-              <input type="radio" name="faturamento" value="9000-12000">
-              <span class="opt-label">R$ 9.000 a R$ 12.000</span>
-            </label>
-            <label class="radio-opt">
-              <input type="radio" name="faturamento" value="12000-15000">
-              <span class="opt-label">R$ 12.000 a R$ 15.000</span>
-            </label>
-            <label class="radio-opt">
-              <input type="radio" name="faturamento" value="15000+">
-              <span class="opt-label">Acima de R$ 15.000</span>
-            </label>
-          </div>
-          <div class="ferr">Por favor, selecione seu faturamento.</div>
+          <div class="ferr">Por favor, selecione sua renda.</div>
         </div>
 
         <div class="btn-row">
@@ -693,65 +644,32 @@
         </div>
       </section>
 
-      <section class="step" data-step="3" data-branch="debt">
-        <div class="step-tag">Etapa 4</div>
-        <h2 class="step-title">Sobre as dívidas</h2>
-        <p class="step-sub">Isso ajuda a indicar o melhor próximo passo.</p>
+      <section class="step" data-step="3">
+        <div class="step-tag">Etapa 4 de 4</div>
+        <h2 class="step-title">Quando você quer resolver isso?</h2>
+        <p class="step-sub">Última pergunta. Isso nos ajuda a priorizar o seu atendimento.</p>
 
-        <div class="field" id="f-origem">
-          <label class="lbl" for="origem">Qual a origem das suas dívidas? <span class="req">*</span></label>
-          <div class="select-wrap">
-            <select id="origem" required>
-              <option value="">Selecione a origem</option>
-              <option value="cartao">Cartão de crédito</option>
-              <option value="cheque">Cheque especial</option>
-              <option value="emprestimo-pessoal">Empréstimo pessoal</option>
-              <option value="consignado">Empréstimo consignado</option>
-              <option value="agiota">Agiota</option>
-              <option value="financiamento">Financiamento</option>
-              <option value="outro">Outro</option>
-            </select>
+        <div class="field" id="f-prioridade">
+          <div class="radio-group">
+            <label class="radio-opt">
+              <input type="radio" name="prioridade" value="agora" required>
+              <span class="opt-label">Quero resolver isso agora</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="prioridade" value="breve" required>
+              <span class="opt-label">Pretendo resolver em breve</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="prioridade" value="pesquisando" required>
+              <span class="opt-label">Só estou pesquisando por enquanto</span>
+            </label>
           </div>
-          <div class="ferr">Por favor, selecione a origem da dívida.</div>
-        </div>
-
-        <div class="conditional" id="consignadoWrap">
-          <div>
-            <div class="field" id="f-consignado">
-              <label class="lbl" for="consignado">Valor descontado em folha por mês <span class="req">*</span></label>
-              <input type="number" id="consignado" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 2500" required>
-              <div class="ferr">Por favor, informe o valor mensal do consignado.</div>
-            </div>
-          </div>
+          <div class="ferr">Por favor, selecione uma opção.</div>
         </div>
 
         <div class="btn-row">
           <button class="btn btn-back" type="button" data-back>Voltar</button>
-          <button class="btn btn-primary" id="submitDebt" type="button">Enviar</button>
-        </div>
-      </section>
-
-      <section class="step" data-step="3" data-branch="no-debt">
-        <div class="step-tag">Etapa 4</div>
-        <h2 class="step-title">Sua situação atual</h2>
-        <p class="step-sub">Selecione a alternativa mais próxima do seu momento.</p>
-
-        <div class="field" id="f-situacao">
-          <label class="lbl" for="situacao">Qual a sua situação financeira atual? <span class="req">*</span></label>
-          <div class="select-wrap">
-            <select id="situacao" required>
-              <option value="">Selecione uma opção</option>
-              <option value="invisto">Já invisto meu dinheiro</option>
-              <option value="sem-sobra">Não tenho dívidas, mas não sobra nada no fim do mês</option>
-              <option value="invisto-prosseguir">Já invisto e quero entender como prosseguir melhor</option>
-            </select>
-          </div>
-          <div class="ferr">Por favor, selecione sua situação atual.</div>
-        </div>
-
-        <div class="btn-row">
-          <button class="btn btn-back" type="button" data-back>Voltar</button>
-          <button class="btn btn-primary" id="submitNoDebt" type="button">Enviar</button>
+          <button class="btn btn-primary" id="submitFinal" type="button">Enviar</button>
         </div>
       </section>
 
@@ -801,57 +719,40 @@ const utms = (function () {
 const URL_COMUNIDADE = 'https://chat.whatsapp.com/JxeUixq8N8e2SF7ZGxYDBu';
 
 const RESULTS = {
-  whatsapp: {
-    tag: 'Perfil selecionado',
-    title: 'Você está pronto(a) para uma conversa de alinhamento',
-    message: 'Pelo seu momento financeiro, o próximo passo é entrar em contato com a nossa equipe para agendar uma reunião de alinhamento gratuita. Vamos entender seu cenário com mais calma e indicar o melhor caminho para organizar sua vida financeira.',
-    button: 'Agendar pelo WhatsApp',
-    url: URL_WHATSAPP,
+  // 12k+ — lead qualificado: vai direto pro WhatsApp da equipe
+  qualificado: {
+    screen: 'whatsapp',
   },
-  endividado: {
-    tag: 'Seu perfil é endividado',
-    title: 'Seu perfil é endividado',
-    message: 'A falta do controle financeiro não te dá clareza de como agir, acesse a nossa comunidade gratuita e fique mais próximo da Raquel e de uma vida financeira mais plena.',
-    button: 'Entrar na comunidade gratuita',
-    url: URL_COMUNIDADE,
+  // 7k a 12k — a analisar: a SDR avalia e chama; sem CTA imediato
+  analisar: {
+    tag: 'Recebemos suas respostas',
+    title: 'Recebemos suas respostas 💛',
+    message: 'Obrigada por responder! Nossa equipe vai analisar o seu perfil e entrar em contato com você em breve pelo WhatsApp. Fique de olho no seu telefone.',
+    button: '',
+    url: '',
   },
-  desorganizado: {
-    tag: 'Seu perfil é desorganizado',
-    title: 'Seu perfil é desorganizado',
-    message: 'Um ponto positivo é que você não tem dívidas, já está à frente de muitos brasileiros, entre na comunidade gratuita e fique mais próximo da Raquel e de uma vida financeira mais plena.',
+  // abaixo de 7k — comunidade gratuita
+  desqualificado: {
+    tag: 'Próximo passo',
+    title: 'Recebemos suas respostas 💛',
+    message: 'Obrigada por responder! Para começar a organizar sua vida financeira agora mesmo, entre na nossa comunidade gratuita e fique mais próximo da Raquel.',
     button: 'Entrar na comunidade gratuita',
     url: URL_COMUNIDADE,
   },
 };
 
-const state = {
-  step: 0,
-  branch: '',
-  path: [0, 1, 2, 3],
-};
+const STEPS = [0, 1, 2, 3];
 
 const fieldsByStep = {
-  0: ['nome', 'email'],
-  1: ['telefone', 'profissao'],
-  2: ['dividas'],
-  3: ['faturamento'],
-  debt: ['origem'],
-  noDebt: ['situacao'],
+  0: ['nome', 'email', 'telefone'],
+  1: ['tipo_divida'],
+  2: ['faturamento'],
+  3: ['prioridade'],
 };
 
-function visibleSteps() {
-  const dividas = radioValue('dividas');
-  const steps = [0, 1, 2, 3];
-  if (dividas === 'sim') steps.push('debt');
-  if (dividas === 'nao') steps.push('noDebt');
-  return steps;
-}
-
 function updateProgress() {
-  const steps = visibleSteps();
-  const currentKey = currentStepKey();
-  const index = Math.max(0, steps.indexOf(currentKey));
-  const total = Math.max(steps.length, 4);
+  const index = Math.max(0, STEPS.indexOf(currentStepKey()));
+  const total = STEPS.length;
   const bar = document.getElementById('progressBar');
   bar.innerHTML = '';
 
@@ -865,82 +766,33 @@ function updateProgress() {
 }
 
 function currentStepKey() {
-  const active = document.querySelector('.step.active');
-  if (active?.dataset.branch === 'debt') return 'debt';
-  if (active?.dataset.branch === 'no-debt') return 'noDebt';
-  if (active?.dataset.branch === 'invest') return 'invest';
-  return Number(active?.dataset.step || 0);
+  return Number(document.querySelector('.step.active')?.dataset.step || 0);
 }
 
 function showStep(key) {
   document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
-
-  let selector = `.step[data-step="${key}"]`;
-  if (key === 'debt') selector = '.step[data-branch="debt"]';
-  if (key === 'noDebt') selector = '.step[data-branch="no-debt"]';
-  if (key === 'invest') selector = '.step[data-branch="invest"]';
-
-  document.querySelector(selector).classList.add('active');
+  document.querySelector(`.step[data-step="${key}"]`).classList.add('active');
   updateProgress();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-
 
 function nextStep() {
   const key = currentStepKey();
   if (!validateStep(key)) return;
 
-  if (key === 2) {
-    // após dívidas → mostrar faturamento com opções corretas
-    updateFaturamentoOpts();
-    state.path = [0, 1, 2, 3];
-    showStep(3);
+  // última etapa (prioridade) → envia
+  if (key === STEPS[STEPS.length - 1]) {
+    submitForm(document.getElementById('submitFinal'), routeLead());
     return;
   }
 
-  if (key === 3) {
-    // após faturamento → ir para branch de dívidas ou sem dívidas
-    const dividas = radioValue('dividas');
-    const next = dividas === 'sim' ? 'debt' : 'noDebt';
-    state.path = [0, 1, 2, 3, next];
-    showStep(next);
-    return;
-  }
-
-  if (key === 'noDebt') {
-    submitForm(document.querySelector('[data-branch="no-debt"] .btn-primary'), routeNoDebt());
-    return;
-  }
-
-  const steps = [0, 1, 2, 3];
-  showStep(steps[steps.indexOf(key) + 1]);
-}
-
-function updateFaturamentoOpts() {
-  const dividas = radioValue('dividas');
-  const debtOpts   = document.getElementById('faturamento-debt-opts');
-  const nodebtOpts = document.getElementById('faturamento-nodebt-opts');
-  const title      = document.getElementById('faturamentoTitle');
-
-  // Limpa seleção anterior de faturamento
-  document.querySelectorAll('input[name="faturamento"]').forEach(r => r.checked = false);
-
-  if (dividas === 'sim') {
-    debtOpts.style.display   = 'flex';
-    nodebtOpts.style.display = 'none';
-    title.textContent = 'Qual é o seu faturamento mensal líquido?';
-  } else {
-    debtOpts.style.display   = 'none';
-    nodebtOpts.style.display = 'flex';
-    title.textContent = 'Qual é o seu faturamento mensal líquido?';
-  }
+  showStep(STEPS[STEPS.indexOf(key) + 1]);
 }
 
 function previousStep() {
   const key = currentStepKey();
-  const index = state.path.indexOf(key);
-  const previous = state.path[Math.max(0, index - 1)];
-  showStep(previous);
+  const index = STEPS.indexOf(key);
+  showStep(STEPS[Math.max(0, index - 1)]);
 }
 
 function value(id) {
@@ -961,57 +813,33 @@ function validEmail(email) {
 
 function validateStep(key) {
   let ok = true;
-  const fields = fieldsByStep[key] || fieldsByStep[String(key)] || [];
+  const fields = fieldsByStep[key] || [];
 
   fields.forEach(id => {
     let invalid = false;
 
     if (id === 'email') invalid = !validEmail(value('email'));
-    else if (id === 'investimento') invalid = !radioValue('investimento');
-    else if (id === 'dividas')      invalid = !radioValue('dividas');
-    else if (id === 'faturamento')  invalid = !radioValue('faturamento');
+    else if (id === 'tipo_divida') invalid = !radioValue('tipo_divida');
+    else if (id === 'faturamento') invalid = !radioValue('faturamento');
+    else if (id === 'prioridade')  invalid = !radioValue('prioridade');
     else invalid = !value(id);
 
     setError(id, invalid);
     ok = ok && !invalid;
   });
 
-  if (key === 'debt' && value('origem') === 'consignado') {
-    const invalid = !value('consignado') || Number(value('consignado')) < 0;
-    setError('consignado', invalid);
-    ok = ok && !invalid;
-  } else {
-    setError('consignado', false);
-  }
-
-  if (key === 1 && value('profissao') === 'empresario') {
-    const invalid = !value('empresa_descricao');
-    setError('empresa-descricao', invalid);
-    ok = ok && !invalid;
-  } else {
-    setError('empresa-descricao', false);
-  }
-
   return ok;
 }
 
-function isHighIncome() {
-  const faturamento = radioValue('faturamento');
-  const dividas = radioValue('dividas');
-  if (dividas === 'sim') return ['12000-15000', '15000+'].includes(faturamento);
-  return ['9000-12000', '12000-15000', '15000+'].includes(faturamento);
-}
-
-function routeDebt() {
-  const faturamento = radioValue('faturamento');
-  if (['12000-15000', '15000+'].includes(faturamento)) return 'whatsapp';
-  return 'endividado';
-}
-
-function routeNoDebt() {
-  const faturamento = radioValue('faturamento');
-  if (['9000-12000', '12000-15000', '15000+'].includes(faturamento)) return 'whatsapp';
-  return 'desorganizado';
+// Qualificação de 3 níveis pela renda:
+//   12k+          -> qualificado (WhatsApp + CompleteRegistration)
+//   7k a 12k      -> analisar (SDR avalia)
+//   abaixo de 7k  -> desqualificado (comunidade)
+function routeLead() {
+  const f = radioValue('faturamento');
+  if (['12000-15000', '15000+'].includes(f)) return 'qualificado';
+  if (f === '7000-12000') return 'analisar';
+  return 'desqualificado';
 }
 
 async function submitForm(button, resultKey) {
@@ -1037,15 +865,14 @@ function fireFinalSubmitButtonPixel(resultKey) {
   if (window.__finalSubmitButtonPixelFired || typeof fbq !== 'function') return;
   window.__finalSubmitButtonPixelFired = true;
 
-  const isQualified = resultKey === 'whatsapp';
-
-  // CompleteRegistration só dispara para leads qualificados (renda 12k+)
-  // Vidas Reais não gera sinal de conversão — evita contaminar o aprendizado da campanha
-  if (isQualified) {
+  // CompleteRegistration só dispara para leads qualificados (renda 12k+).
+  // Os demais não geram sinal de conversão — mantém a campanha otimizando
+  // para o público que realmente é ICP.
+  if (resultKey === 'qualificado') {
     fbq('track', 'CompleteRegistration', {
       content_name: 'Formulário Consultoria Individual',
       content_category: 'WhatsApp - Reunião de Alinhamento',
-      status: radioValue('dividas') === 'sim' ? 'Com dívidas' : 'Sem dívidas',
+      status: radioText('tipo_divida'),
       income_range: radioText('faturamento'),
       currency: 'BRL',
       value: 8500,
@@ -1054,19 +881,29 @@ function fireFinalSubmitButtonPixel(resultKey) {
 }
 
 function showResult(resultKey) {
-  if (resultKey === 'whatsapp') {
+  const result = RESULTS[resultKey];
+
+  if (result.screen === 'whatsapp') {
     showWhatsAppScreen();
     return;
   }
 
-  const result = RESULTS[resultKey];
   document.getElementById('leadForm').style.display = 'none';
   document.querySelector('.progress-wrap').style.display = 'none';
+  document.querySelector('.form-header').style.display = 'none';
   document.getElementById('resultTag').textContent = result.tag;
   document.getElementById('resultTitle').textContent = result.title;
   document.getElementById('resultMessage').textContent = result.message;
-  document.getElementById('resultButton').textContent = result.button;
-  document.getElementById('resultButton').href = result.url;
+
+  const btn = document.getElementById('resultButton');
+  if (result.url) {
+    btn.textContent = result.button;
+    btn.href = result.url;
+    btn.style.display = '';
+  } else {
+    btn.style.display = 'none';
+  }
+
   document.getElementById('resultScreen').classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -1089,34 +926,23 @@ document.getElementById('whatsappBtn').addEventListener('click', function () {
     content_name: 'Clique WhatsApp - Reunião de Alinhamento',
     content_category: 'WhatsApp - Reunião de Alinhamento',
     currency: 'BRL',
-    status: radioValue('dividas') === 'sim' ? 'Com dívidas' : 'Sem dívidas',
+    status: radioText('tipo_divida'),
     income_range: radioText('faturamento'),
   });
 });
 
 function collectLeadData(resultKey) {
-  const origem = value('origem');
-  const hasConsignado = origem === 'consignado';
-  const direcionamento = resultKey === 'whatsapp'
-    ? 'Botão WhatsApp - reunião de alinhamento'
-    : resultKey === 'endividado'
-      ? 'Comunidade - Perfil Endividado'
-      : 'Comunidade - Perfil Desorganizado';
-
   return {
     name: value('nome'),
     email: value('email'),
     phone: value('telefone'),
-    '04 - Profissão': selectedText('profissao'),
-    '05 - Do que se trata a empresa': value('profissao') === 'empresario' ? value('empresa_descricao') : 'Não se aplica',
+    // valor cru da renda (0-3000, 7000-12000, ...) — o CRM roteia a coluna por aqui
+    'faturamento': radioValue('faturamento'),
+    // texto amigável da renda — vira o campo "renda" no card do CRM
     '06 - Faturamento mensal líquido': radioText('faturamento'),
-    '07 - Possui dívidas atualmente': radioText('dividas'),
-    '08 - Origem das dívidas': selectedText('origem') || 'Não se aplica',
-    '09 - Valor descontado em folha pelo consignado': hasConsignado ? formatCurrency(value('consignado')) : 'Não se aplica',
-    '10 - Situação financeira atual': selectedText('situacao') || 'Não se aplica',
-    '11 - Disposto(a) a investir R$ 1.000/mês': radioText('investimento') || 'Não se aplica',
-    '12 - Direcionamento': direcionamento,
-    '11b - Dívida que mais pesa': value('divida_peso') || 'Não se aplica',
+    '08 - Origem das dívidas': radioText('tipo_divida'),
+    'prioridade': radioText('prioridade'),
+    '12 - Direcionamento': 'High Ticket Formulário',
     '13 - Página de origem': window.location.href,
     '14 - Data do envio': new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }),
     '15 - UTM Origem': utms.utm_source,
@@ -1159,19 +985,9 @@ async function submitToCrm(data) {
   return json;
 }
 
-function selectedText(id) {
-  const el = document.getElementById(id);
-  return el?.selectedOptions?.[0]?.value ? el.selectedOptions[0].textContent.trim() : '';
-}
-
 function radioText(name) {
   const checked = document.querySelector(`input[name="${name}"]:checked`);
   return checked ? checked.closest('.radio-opt')?.textContent.trim() || checked.value : '';
-}
-
-function formatCurrency(raw) {
-  const number = Number(raw || 0);
-  return number.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
 function showSendError(button) {
@@ -1193,28 +1009,9 @@ document.querySelectorAll('[data-back]').forEach(button => {
   button.addEventListener('click', previousStep);
 });
 
-document.getElementById('submitDebt').addEventListener('click', event => {
-  if (!validateStep('debt')) return;
-  submitForm(event.currentTarget, routeDebt());
-});
-
-document.getElementById('submitNoDebt').addEventListener('click', event => {
-  if (!validateStep('noDebt')) return;
-  submitForm(event.currentTarget, routeNoDebt());
-});
-
-document.getElementById('origem').addEventListener('change', event => {
-  const isConsignado = event.target.value === 'consignado';
-  document.getElementById('consignadoWrap').classList.toggle('show', isConsignado);
-  if (!isConsignado) document.getElementById('consignado').value = '';
-  setError('consignado', false);
-});
-
-document.getElementById('profissao').addEventListener('change', event => {
-  const isEmpresario = event.target.value === 'empresario';
-  document.getElementById('empresaWrap').classList.toggle('show', isEmpresario);
-  if (!isEmpresario) document.getElementById('empresa_descricao').value = '';
-  setError('empresa-descricao', false);
+document.getElementById('submitFinal').addEventListener('click', event => {
+  if (!validateStep(currentStepKey())) return;
+  submitForm(event.currentTarget, routeLead());
 });
 
 document.querySelectorAll('input, select, textarea').forEach(input => {
