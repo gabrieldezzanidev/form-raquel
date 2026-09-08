@@ -930,6 +930,10 @@ document.getElementById('whatsappBtn').addEventListener('click', function () {
 function collectLeadData(resultKey) {
   return {
     name: value('nome'),
+    // A classificação já é calculada aqui para rotear a página e o pixel.
+    // Mandar junto evita repetir a mesma regra no servidor e ver as duas
+    // versões discordarem depois.
+    qualificacao: resultKey || '',
     email: value('email'),
     phone: value('telefone'),
     // valor cru da renda (0-3000, 7000-12000, ...) — o CRM roteia a coluna por aqui
