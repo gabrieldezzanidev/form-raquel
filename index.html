@@ -500,12 +500,29 @@
       box-shadow: 0 4px 16px rgba(37,211,102,.35);
     }
 
+    .agenda-embed {
+      height: 720px;
+      min-width: 300px;
+      margin-top: 1.5rem;
+    }
+
+    .agenda-ajuda {
+      font-size: 0.82rem !important;
+      margin-top: 1rem !important;
+    }
+
+    .agenda-ajuda a {
+      color: var(--text);
+      text-decoration: underline;
+    }
+
     .whatsapp-screen .btn-primary:hover {
       background: #1ebe5a;
       box-shadow: 0 6px 22px rgba(37,211,102,.45);
     }
 
     @media (max-width: 600px) {
+      .agenda-embed { height: 1020px; }
       body { padding: 1.5rem 0.75rem 4rem; }
       .logo img { height: 68px; }
       .form-card { padding: 1.75rem 1.25rem; border-radius: 16px; }
@@ -680,9 +697,25 @@
         </svg>
       </div>
       <div class="step-tag">Próximo passo</div>
-      <h2 class="step-title">Você foi selecionado(a) para uma conversa de alinhamento</h2>
-      <p>Pelo seu perfil, o próximo passo é entrar em contato com a nossa equipe pelo WhatsApp para agendar sua reunião de alinhamento gratuita.</p>
-      <a class="btn btn-primary" id="whatsappBtn" href="#" target="_blank" rel="noopener">Agendar reunião gratuita</a>
+      <h2 class="step-title">Você foi selecionado(a) para uma reunião de alinhamento</h2>
+      <p>Escolha abaixo o melhor dia e horário para conversar com a Raquel. A reunião é gratuita, online e dura cerca de uma hora.</p>
+      <div id="agendaEmbed" class="agenda-embed"></div>
+      <p class="agenda-ajuda">Nenhum horário encaixou na sua rotina?
+        <a id="whatsappBtn" href="#" target="_blank" rel="noopener">Fale com a nossa equipe no WhatsApp</a>
+      </p>
+    </section>
+
+    <section class="whatsapp-screen" id="agendadoScreen" aria-live="polite">
+      <div class="result-icon">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none"
+             stroke="#D4AF1A" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <div class="step-tag">Reunião marcada</div>
+      <h2 class="step-title">Prontinho, sua reunião está marcada 💛</h2>
+      <p>Você vai receber a confirmação no seu e-mail, com o link da sala, e uma mensagem nossa no WhatsApp. Até lá!</p>
     </section>
 
     <section class="result-screen" id="resultScreen" aria-live="polite">
@@ -701,6 +734,12 @@
   </main>
 
 <script>
+// A agenda da Raquel. A pessoa qualificada escolhe o horário aqui mesmo, e o
+// agendamento volta pro CRM ligado ao card dela pelo utm_content.
+const URL_AGENDA = 'https://calendly.com/raquelalvares-financas/diagnostico';
+const AVISO_AGENDAMENTO = 'https://lume-solutions.vercel.app/api/cal-webhook?fonte=calendly&c=raquel-alvares';
+let leadId = '';
+
 const URL_WHATSAPP = 'https://wa.me/5511918880532?text=Ol%C3%A1%2C%20preenchi%20o%20formul%C3%A1rio%20de%20qualifica%C3%A7%C3%A3o%20financeira%20e%20gostaria%20de%20agendar%20minha%20reuni%C3%A3o%20de%20alinhamento%20gratuita.';
 
 const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
@@ -848,7 +887,8 @@ async function submitForm(button, resultKey) {
   try {
     const data = collectLeadData(resultKey);
     await submitToFormspree(data);
-    await submitToCrm(data);
+    const salvo = await submitToCrm(data);
+    leadId = (salvo && salvo.leadId) || '';
     showResult(resultKey);
   } catch (error) {
     button.disabled = false;
@@ -911,6 +951,81 @@ function showWhatsAppScreen() {
   const screen = document.getElementById('whatsappScreen');
   document.getElementById('whatsappBtn').href = URL_WHATSAPP;
   screen.classList.add('active');
+  abrirAgenda();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// A agenda só é carregada para quem chega até aqui: nada de script de terceiro
+// pesando no formulário de quem nem é do perfil.
+function abrirAgenda() {
+  const destino = document.getElementById('agendaEmbed');
+  if (!destino || destino.dataset.pronto) return;
+  destino.dataset.pronto = '1';
+
+  const monta = () => {
+    if (!window.Calendly) return;
+    window.Calendly.initInlineWidget({
+      url: URL_AGENDA + '?hide_gdpr_banner=1',
+      parentElement: destino,
+      // Nome e e-mail ela digita na própria agenda. Jogar os dois na URL do
+      // embed só pra poupar dois campos espalha dado pessoal por histórico e
+      // log de terceiro, e não é o que liga o agendamento ao card.
+      // utm_content é o id do card no CRM: é por ele que o agendamento acha a
+      // pessoa certa, já que o Calendly não pergunta WhatsApp.
+      utm: {
+        utmContent: leadId,
+        utmSource: utms.utm_source,
+        utmMedium: utms.utm_medium,
+        utmCampaign: utms.utm_campaign,
+      },
+    });
+  };
+
+  const css = document.createElement('link');
+  css.rel = 'stylesheet';
+  css.href = 'https://assets.calendly.com/assets/external/widget.css';
+  document.head.appendChild(css);
+
+  const script = document.createElement('script');
+  script.src = 'https://assets.calendly.com/assets/external/widget.js';
+  script.async = true;
+  script.onload = monta;
+  document.head.appendChild(script);
+}
+
+// O Calendly avisa a própria página quando o horário é escolhido. A página conta
+// ao CRM qual foi o agendamento, e o CRM confere tudo na API do Calendly: o que
+// vale é o que a API responde, não o que chega daqui.
+window.addEventListener('message', function (e) {
+  if (e.origin !== 'https://calendly.com') return;
+  const dados = e.data;
+  if (!dados || typeof dados !== 'object' || dados.event !== 'calendly.event_scheduled') return;
+  const convidado = dados.payload && dados.payload.invitee && dados.payload.invitee.uri;
+  if (convidado) {
+    // keepalive: se ela fechar a página logo depois, o aviso sai mesmo assim
+    fetch(AVISO_AGENDAMENTO, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ convidado: convidado }),
+      keepalive: true,
+    }).catch(function () {});
+  }
+  showAgendadoScreen();
+});
+
+function showAgendadoScreen() {
+  if (typeof fbq === 'function' && !window.__agendouPixelFired) {
+    window.__agendouPixelFired = true;
+    fbq('track', 'Lead', {
+      content_name: 'Reunião de alinhamento marcada na agenda',
+      content_category: 'Calendly - Reunião de Alinhamento',
+      currency: 'BRL',
+      status: radioText('tipo_divida'),
+      income_range: radioText('faturamento'),
+    });
+  }
+  document.getElementById('whatsappScreen').classList.remove('active');
+  document.getElementById('agendadoScreen').classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 

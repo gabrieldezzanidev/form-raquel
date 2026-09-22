@@ -80,7 +80,10 @@ module.exports = async (req, res) => {
 
     await antigo;
 
-    if (r.ok) { res.status(200).json({ ok: true, agente: !!(json && json.agente) }); return; }
+    // leadId é o id do card no CRM. A página manda ele pro Calendly (utm_content),
+    // e é assim que o agendamento volta pra pessoa certa: o Calendly da Raquel
+    // não pergunta WhatsApp.
+    if (r.ok) { res.status(200).json({ ok: true, agente: !!(json && json.agente), leadId: (json && json.leadId) || '' }); return; }
     res.status(r.status >= 400 && r.status < 500 ? 400 : 502)
        .json({ ok: false, error: (json && json.error) || text.slice(0, 300) });
   } catch (e) {
