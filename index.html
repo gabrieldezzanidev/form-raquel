@@ -472,6 +472,28 @@
       text-decoration: none;
     }
 
+    .confirma-pergunta {
+      color: var(--text) !important;
+      font-weight: 700;
+      margin-top: 1.6rem !important;
+    }
+
+    .confirma-botoes {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      margin-top: 1.4rem;
+    }
+
+    .result-screen .confirma-botoes .btn-primary { margin-top: 0; }
+
+    .aviso-previa {
+      font-size: 0.82rem !important;
+      border: 1.5px dashed var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+    }
+
     .whatsapp-screen {
       display: none;
       text-align: center;
@@ -741,7 +763,7 @@
         </svg>
       </div>
       <div class="step-tag">Próximo passo</div>
-      <h2 class="step-title">Você foi selecionado(a) para uma reunião de alinhamento</h2>
+      <h2 class="step-title">Você foi selecionado(a) para uma reunião de diagnóstico</h2>
       <p>Escolha abaixo o melhor dia e horário para conversar com a Raquel. A reunião é gratuita, online e dura cerca de uma hora.</p>
       <div id="agendaEmbed" class="agenda-embed"></div>
       <p class="agenda-ajuda">Nenhum horário encaixou na sua rotina?
@@ -760,6 +782,21 @@
       <div class="step-tag">Reunião marcada</div>
       <h2 class="step-title">Prontinho, sua reunião está marcada 💛</h2>
       <p>Você vai receber a confirmação no seu e-mail, com o link da sala, e uma mensagem nossa no WhatsApp. Até lá!</p>
+    </section>
+
+    <!-- Quem marcou renda de 12 mil ou mais confirma aqui, já sabendo que a
+         consultoria é paga, antes de a agenda abrir e antes de o lead ir pro CRM. -->
+    <section class="result-screen" id="confirmaRendaScreen" aria-live="polite">
+      <div class="step-tag">Quase lá</div>
+      <h2 class="step-title">Antes de escolher o seu horário</h2>
+      <p>A reunião de diagnóstico é gratuita, e é o primeiro passo da consultoria com a minha equipe.</p>
+      <p>A consultoria é um acompanhamento pago, pensado para quem tem renda a partir de R$ 12 mil por mês.</p>
+      <p>Se a sua realidade hoje é outra, tudo bem. Tem um caminho gratuito para você também.</p>
+      <p class="confirma-pergunta">A sua renda é de R$ 12 mil ou mais por mês?</p>
+      <div class="confirma-botoes">
+        <button class="btn btn-primary" id="confirmaSim" type="button">Sim, quero escolher meu horário</button>
+        <button class="btn btn-back" id="confirmaNao" type="button">Ainda não, quero o caminho gratuito</button>
+      </div>
     </section>
 
     <section class="result-screen" id="resultScreen" aria-live="polite">
@@ -781,6 +818,12 @@
 // A agenda da Raquel. A pessoa qualificada escolhe o horário aqui mesmo, e o
 // agendamento volta pro CRM ligado ao card dela pelo utm_content.
 const URL_AGENDA = 'https://calendly.com/raquelalvares-financas/diagnostico';
+
+// Fora do domínio da Raquel (prévia da Vercel, teste local) nada sai daqui:
+// nem lead pro CRM, nem e-mail, nem agenda, nem evento pro pixel. Assim dá
+// para mandar o link da prévia para aprovação sem criar lead falso.
+const PREVIA = !/(^|\.)raquelalvares\.com\.br$/.test(window.location.hostname);
+if (PREVIA) window.fbq = function () {};
 const AVISO_AGENDAMENTO = 'https://lume-solutions.vercel.app/api/cal-webhook?fonte=calendly&c=raquel-alvares';
 let leadId = '';
 
@@ -809,6 +852,15 @@ const RESULTS = {
     message: 'Obrigada por responder! Nossa equipe vai analisar o seu perfil e entrar em contato com você em breve pelo WhatsApp. Fique de olho no seu telefone.',
     button: '',
     url: '',
+  },
+  // marcou 12k+ mas, sabendo que a consultoria é paga, disse que a renda é
+  // menor: mesma tela da comunidade gratuita
+  'nao-confirmou': {
+    tag: 'Próximo passo',
+    title: 'Recebemos suas respostas 💛',
+    message: 'Obrigada por responder! Para começar a organizar sua vida financeira agora mesmo, entre na nossa comunidade gratuita e fique mais próximo da Raquel.',
+    button: 'Entrar na comunidade gratuita',
+    url: URL_COMUNIDADE,
   },
   // abaixo de 7k — comunidade gratuita
   desqualificado: {
@@ -871,7 +923,7 @@ function nextStep() {
 
   // última etapa (prioridade) → envia
   if (key === STEPS[STEPS.length - 1]) {
-    submitForm(document.getElementById('submitFinal'), routeLead());
+    enviarFinal(document.getElementById('submitFinal'));
     return;
   }
 
@@ -943,11 +995,18 @@ async function submitForm(button, resultKey) {
   button.textContent = 'Enviando...';
   fireFinalSubmitButtonPixel(resultKey);
 
+  if (PREVIA) {
+    document.getElementById('confirmaRendaScreen').classList.remove('active');
+    showResult(resultKey);
+    return;
+  }
+
   try {
     const data = collectLeadData(resultKey);
     await submitToFormspree(data);
     const salvo = await submitToCrm(data);
     leadId = (salvo && salvo.leadId) || '';
+    document.getElementById('confirmaRendaScreen').classList.remove('active');
     showResult(resultKey);
   } catch (error) {
     button.disabled = false;
@@ -1020,6 +1079,14 @@ function abrirAgenda() {
   const destino = document.getElementById('agendaEmbed');
   if (!destino || destino.dataset.pronto) return;
   destino.dataset.pronto = '1';
+
+  // Na prévia a agenda não carrega: um horário marcado ali seria uma reunião
+  // de verdade na agenda da Raquel.
+  if (PREVIA) {
+    destino.style.height = 'auto';
+    destino.innerHTML = '<p class="aviso-previa">Aqui aparece a agenda da Raquel para a pessoa escolher o horário. Na prévia ela fica desligada.</p>';
+    return;
+  }
 
   const monta = () => {
     if (!window.Calendly) return;
@@ -1102,6 +1169,10 @@ document.getElementById('whatsappBtn').addEventListener('click', function () {
 });
 
 function collectLeadData(resultKey) {
+  // Quem disse "ainda não" na confirmação sai da faixa que marcou: o valor cru
+  // não bate com nenhuma temperatura do CRM, e o lead cai na conversa padrão,
+  // em que a atendente entende a renda antes de propor qualquer coisa.
+  const naoConfirmou = resultKey === 'nao-confirmou';
   return {
     name: value('nome'),
     // A classificação já é calculada aqui para rotear a página e o pixel.
@@ -1111,9 +1182,11 @@ function collectLeadData(resultKey) {
     email: value('email'),
     phone: value('telefone'),
     // valor cru da renda (0-3000, 7000-12000, ...) — o CRM roteia a coluna por aqui
-    'faturamento': radioValue('faturamento'),
+    'faturamento': naoConfirmou ? 'nao-confirmou' : radioValue('faturamento'),
     // texto amigável da renda — vira o campo "renda" no card do CRM
-    '06 - Faturamento mensal líquido': radioText('faturamento'),
+    '06 - Faturamento mensal líquido': naoConfirmou
+      ? `Marcou ${radioText('faturamento')}, mas na confirmação disse que a renda é menor que R$ 12 mil`
+      : radioText('faturamento'),
     '08 - Origem das dívidas': radioText('tipo_divida'),
     '09 - Valor aproximado das dívidas': semDividas() ? '' : radioText('valor_divida'),
     'prioridade': radioText('prioridade'),
@@ -1186,7 +1259,32 @@ document.querySelectorAll('[data-back]').forEach(button => {
 
 document.getElementById('submitFinal').addEventListener('click', event => {
   if (!validateStep(currentStepKey())) return;
-  submitForm(event.currentTarget, routeLead());
+  enviarFinal(event.currentTarget);
+});
+
+// Quem marcou 12 mil ou mais passa pela confirmação antes de qualquer envio.
+// O pixel continua disparando aqui, no fim do formulário, como antes da tela
+// existir: a mudança do evento para o "Sim" fica para depois da aprovação.
+function enviarFinal(button) {
+  const resultKey = routeLead();
+  if (resultKey !== 'qualificado') {
+    submitForm(button, resultKey);
+    return;
+  }
+  fireFinalSubmitButtonPixel('qualificado');
+  document.getElementById('leadForm').style.display = 'none';
+  document.querySelector('.progress-wrap').style.display = 'none';
+  document.querySelector('.form-header').style.display = 'none';
+  document.getElementById('confirmaRendaScreen').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.getElementById('confirmaSim').addEventListener('click', event => {
+  submitForm(event.currentTarget, 'qualificado');
+});
+
+document.getElementById('confirmaNao').addEventListener('click', event => {
+  submitForm(event.currentTarget, 'nao-confirmou');
 });
 
 document.querySelectorAll('input, select, textarea').forEach(input => {
