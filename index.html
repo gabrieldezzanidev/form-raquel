@@ -556,7 +556,7 @@
   <main class="form-card">
     <form id="leadForm" novalidate>
       <section class="step active" data-step="0">
-        <div class="step-tag">Etapa 1 de 4</div>
+        <div class="step-tag">Etapa 1 de 5</div>
         <h2 class="step-title">Vamos começar</h2>
         <p class="step-sub">Seus dados de contato para a nossa equipe falar com você.</p>
 
@@ -584,7 +584,7 @@
       </section>
 
       <section class="step" data-step="1">
-        <div class="step-tag">Etapa 2 de 4</div>
+        <div class="step-tag">Etapa 2 de 5</div>
         <h2 class="step-title">Qual tipo de dívida pesa mais hoje?</h2>
         <p class="step-sub">Escolha a que mais representa o seu momento.</p>
 
@@ -625,15 +625,59 @@
       </section>
 
       <section class="step" data-step="2">
-        <div class="step-tag">Etapa 3 de 4</div>
-        <h2 class="step-title">Qual é a sua renda mensal líquida?</h2>
+        <div class="step-tag">Etapa 3 de 5</div>
+        <h2 class="step-title">Somando tudo, quanto você deve hoje, mais ou menos?</h2>
         <p class="step-sub">Uma estimativa já é suficiente.</p>
+
+        <div class="field" id="f-valor_divida">
+          <div class="radio-group">
+            <label class="radio-opt">
+              <input type="radio" name="valor_divida" value="0-10000" required>
+              <span class="opt-label">Até R$ 10 mil</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="valor_divida" value="10000-30000" required>
+              <span class="opt-label">R$ 10 mil a R$ 30 mil</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="valor_divida" value="30000-100000" required>
+              <span class="opt-label">R$ 30 mil a R$ 100 mil</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="valor_divida" value="100000+" required>
+              <span class="opt-label">Acima de R$ 100 mil</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="valor_divida" value="nao-sei" required>
+              <span class="opt-label">Não sei</span>
+            </label>
+          </div>
+          <div class="ferr">Por favor, selecione uma opção.</div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-back" type="button" data-back>Voltar</button>
+          <button class="btn btn-primary" type="button" data-next>Continuar</button>
+        </div>
+      </section>
+
+      <section class="step" data-step="3">
+        <div class="step-tag">Etapa 4 de 5</div>
+        <h2 class="step-title">Quanto você ganha por mês, já com os descontos?</h2>
+        <p class="step-sub">Só o que você recebe. Não some as dívidas aqui.</p>
 
         <div class="field" id="f-faturamento">
           <div class="radio-group">
+            <!-- As duas faixas baixas mandam o mesmo valor cru, 0-7000: é ele que
+                 a régua de temperatura do CRM da Lume conhece. O texto da tela,
+                 que vai junto, é o que separa uma da outra no card. -->
             <label class="radio-opt">
               <input type="radio" name="faturamento" value="0-7000" required>
-              <span class="opt-label">Até R$ 7.000</span>
+              <span class="opt-label">Até R$ 3.000</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="faturamento" value="0-7000" required>
+              <span class="opt-label">R$ 3.000 a R$ 7.000</span>
             </label>
             <label class="radio-opt">
               <input type="radio" name="faturamento" value="7000-12000" required>
@@ -657,8 +701,8 @@
         </div>
       </section>
 
-      <section class="step" data-step="3">
-        <div class="step-tag">Etapa 4 de 4</div>
+      <section class="step" data-step="4">
+        <div class="step-tag">Etapa 5 de 5</div>
         <h2 class="step-title">Quando você quer resolver isso?</h2>
         <p class="step-sub">Última pergunta. Isso nos ajuda a priorizar o seu atendimento.</p>
 
@@ -776,14 +820,24 @@ const RESULTS = {
   },
 };
 
-const STEPS = [0, 1, 2, 3];
+const STEPS = [0, 1, 2, 3, 4];
+
+// O valor da dívida vem antes da renda de propósito: quem tem o número da dívida
+// na cabeça marcava ele como renda. Perguntando antes, os dois ficam separados.
+const STEP_VALOR_DIVIDA = 2;
 
 const fieldsByStep = {
   0: ['nome', 'email', 'telefone'],
   1: ['tipo_divida'],
-  2: ['faturamento'],
-  3: ['prioridade'],
+  2: ['valor_divida'],
+  3: ['faturamento'],
+  4: ['prioridade'],
 };
+
+// Quem marcou que não tem dívida não é perguntado quanto deve.
+function semDividas() {
+  return radioValue('tipo_divida') === 'sem-dividas';
+}
 
 function updateProgress() {
   const index = Math.max(0, STEPS.indexOf(currentStepKey()));
@@ -821,13 +875,17 @@ function nextStep() {
     return;
   }
 
-  showStep(STEPS[STEPS.indexOf(key) + 1]);
+  let next = STEPS[STEPS.indexOf(key) + 1];
+  if (next === STEP_VALOR_DIVIDA && semDividas()) next = STEPS[STEPS.indexOf(next) + 1];
+  showStep(next);
 }
 
 function previousStep() {
   const key = currentStepKey();
   const index = STEPS.indexOf(key);
-  showStep(STEPS[Math.max(0, index - 1)]);
+  let prev = STEPS[Math.max(0, index - 1)];
+  if (prev === STEP_VALOR_DIVIDA && semDividas()) prev = STEPS[Math.max(0, index - 2)];
+  showStep(prev);
 }
 
 function value(id) {
@@ -855,6 +913,7 @@ function validateStep(key) {
 
     if (id === 'email') invalid = !validEmail(value('email'));
     else if (id === 'tipo_divida') invalid = !radioValue('tipo_divida');
+    else if (id === 'valor_divida') invalid = !radioValue('valor_divida');
     else if (id === 'faturamento') invalid = !radioValue('faturamento');
     else if (id === 'prioridade')  invalid = !radioValue('prioridade');
     else invalid = !value(id);
@@ -1056,6 +1115,7 @@ function collectLeadData(resultKey) {
     // texto amigável da renda — vira o campo "renda" no card do CRM
     '06 - Faturamento mensal líquido': radioText('faturamento'),
     '08 - Origem das dívidas': radioText('tipo_divida'),
+    '09 - Valor aproximado das dívidas': semDividas() ? '' : radioText('valor_divida'),
     'prioridade': radioText('prioridade'),
     '12 - Direcionamento': 'High Ticket Formulário',
     '13 - Página de origem': window.location.href,

@@ -40,6 +40,7 @@ function paraLume(b) {
       'faturamento': b['06 - Faturamento mensal líquido'] || '',
       'faixa-faturamento': b.faturamento || '',
       'tipo-divida': b['08 - Origem das dívidas'] || '',
+      'valor-divida': b['09 - Valor aproximado das dívidas'] || '',
       'prioridade': b.prioridade || '',
       'qualificacao': b.qualificacao || '',
       'pagina': b['13 - Página de origem'] || '',
