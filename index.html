@@ -1019,7 +1019,8 @@ function fireFinalSubmitButtonPixel(resultKey) {
   if (window.__finalSubmitButtonPixelFired || typeof fbq !== 'function') return;
   window.__finalSubmitButtonPixelFired = true;
 
-  // CompleteRegistration só dispara para leads qualificados (renda 12k+).
+  // CompleteRegistration só dispara para leads qualificados (renda 12k+) que
+  // confirmaram a renda na tela de confirmação.
   // Os demais não geram sinal de conversão — mantém a campanha otimizando
   // para o público que realmente é ICP.
   if (resultKey === 'qualificado') {
@@ -1263,15 +1264,14 @@ document.getElementById('submitFinal').addEventListener('click', event => {
 });
 
 // Quem marcou 12 mil ou mais passa pela confirmação antes de qualquer envio.
-// O pixel continua disparando aqui, no fim do formulário, como antes da tela
-// existir: a mudança do evento para o "Sim" fica para depois da aprovação.
+// O CompleteRegistration só sai no "Sim" (dentro do submitForm): quem volta
+// atrás na confirmação não ensina a campanha a buscar lead que não é do perfil.
 function enviarFinal(button) {
   const resultKey = routeLead();
   if (resultKey !== 'qualificado') {
     submitForm(button, resultKey);
     return;
   }
-  fireFinalSubmitButtonPixel('qualificado');
   document.getElementById('leadForm').style.display = 'none';
   document.querySelector('.progress-wrap').style.display = 'none';
   document.querySelector('.form-header').style.display = 'none';
