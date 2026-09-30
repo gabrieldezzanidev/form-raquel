@@ -29,8 +29,17 @@ const CRM_ANTIGO = process.env.CRM_FORM_ENDPOINT
 
 /** O que a página manda vira o que o CRM da Lume entende. */
 function paraLume(b) {
+  // O CRM é o mesmo para vários clientes, e o que só a Raquel pergunta não
+  // vira campo lá: vai para as anotações do card.
+  const notas = []
+  if (b['09 - Valor aproximado das dívidas']) {
+    notas.push('Valor aproximado das dívidas: ' + b['09 - Valor aproximado das dívidas'])
+  }
+  if (b.qualificacao === 'qualificado') notas.push('Renda: marcou R$ 12 mil ou mais e confirmou na tela seguinte')
+  if (b.qualificacao === 'nao-confirmou') notas.push('Renda: marcou R$ 12 mil ou mais, mas na confirmação disse que ganha menos')
   return {
     nome: b.name || '',
+    observacoes: notas.length ? 'Formulário:\n' + notas.join('\n') : '',
     whatsapp: b.phone || '',
     email: b.email || '',
     campos: {
@@ -40,14 +49,6 @@ function paraLume(b) {
       'faturamento': b['06 - Faturamento mensal líquido'] || '',
       'faixa-faturamento': b.faturamento || '',
       'tipo-divida': b['08 - Origem das dívidas'] || '',
-      'valor-divida': b['09 - Valor aproximado das dívidas'] || '',
-      // Só quem marcou 12 mil ou mais passa pela confirmação. O texto vai
-      // pronto porque é o que aparece no card e o que a atendente lê.
-      'confirmacao-renda': b.qualificacao === 'qualificado'
-        ? 'Marcou R$ 12 mil ou mais e confirmou'
-        : b.qualificacao === 'nao-confirmou'
-          ? 'Marcou R$ 12 mil ou mais, mas na confirmação disse que ganha menos'
-          : '',
       'prioridade': b.prioridade || '',
       'qualificacao': b.qualificacao || '',
       'pagina': b['13 - Página de origem'] || '',
