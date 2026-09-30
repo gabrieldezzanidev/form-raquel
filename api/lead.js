@@ -41,6 +41,13 @@ function paraLume(b) {
       'faixa-faturamento': b.faturamento || '',
       'tipo-divida': b['08 - Origem das dívidas'] || '',
       'valor-divida': b['09 - Valor aproximado das dívidas'] || '',
+      // Só quem marcou 12 mil ou mais passa pela confirmação. O texto vai
+      // pronto porque é o que aparece no card e o que a atendente lê.
+      'confirmacao-renda': b.qualificacao === 'qualificado'
+        ? 'Marcou R$ 12 mil ou mais e confirmou'
+        : b.qualificacao === 'nao-confirmou'
+          ? 'Marcou R$ 12 mil ou mais, mas na confirmação disse que ganha menos'
+          : '',
       'prioridade': b.prioridade || '',
       'qualificacao': b.qualificacao || '',
       'pagina': b['13 - Página de origem'] || '',
