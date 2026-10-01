@@ -51,6 +51,10 @@ function paraLume(b) {
       'tipo-divida': b['08 - Origem das dívidas'] || '',
       'prioridade': b.prioridade || '',
       'qualificacao': b.qualificacao || '',
+      // Quem disse "Sim" na tela de confirmação de renda. A atendente lê isso pra
+      // não perguntar de novo; quem não tem esse campo (lead de antes da tela,
+      // ou de outro caminho) tem a renda confirmada na conversa antes do link.
+      'renda-confirmada': b.qualificacao === 'qualificado' ? 'Sim, na tela de confirmação disse que ganha R$ 12 mil ou mais' : '',
       'pagina': b['13 - Página de origem'] || '',
       'utm-source': b['15 - UTM Origem'] || '',
       'utm-medium': b['16 - UTM Mídia'] || '',
