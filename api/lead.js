@@ -37,6 +37,7 @@ function paraLume(b) {
   }
   if (b.qualificacao === 'qualificado') notas.push('Renda: marcou R$ 12 mil ou mais e confirmou na tela seguinte')
   if (b.qualificacao === 'nao-confirmou') notas.push('Renda: marcou R$ 12 mil ou mais, mas na confirmação disse que ganha menos')
+  if (b.destino === 'vsl') notas.push('Foi direto para a VSL do Vidas Reais gravado, sem conversa com a Gabi')
   return {
     nome: b.name || '',
     observacoes: notas.length ? 'Formulário:\n' + notas.join('\n') : '',
